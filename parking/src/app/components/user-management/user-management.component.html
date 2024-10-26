@@ -1,1 +1,49 @@
-<p>user-management works!</p>
+<div class="users-management-container">
+    <header class="users-header">
+        <h1>Gestión de Usuarios</h1>
+        <p>Aquí puedes ver y gestionar todos los usuarios registrados en el sistema.</p>
+    </header>
+
+    <div class="users-content">
+        <!-- Barra de Filtro y Búsqueda -->
+        <div class="filter-bar">
+            <input type="text" placeholder="Buscar usuario por nombre..." [(ngModel)]="searchTerm" />
+            <select [(ngModel)]="filterRole">
+                <option value="">Todos los Roles</option>
+                <option value="admin">Administrador</option>
+                <option value="user">Usuario</option>
+            </select>
+        </div>
+
+        <!-- Tabla de Usuarios -->
+        <table class="users-table">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Email</th>
+                    <th>Rol</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+            </tbody>
+        </table>
+
+        <!-- Formulario para Añadir o Editar Usuario -->
+        <div class="user-form">
+            <h2>{{ isEditing ? 'Editar Usuario' : 'Añadir Nuevo Usuario' }}</h2>
+            <form (submit)="saveUser()">
+                <input type="text" [(ngModel)]="userForm.name" placeholder="Nombre Completo" required />
+                <input type="email" [(ngModel)]="userForm.email" placeholder="Email" required />
+                <select [(ngModel)]="userForm.role" required>
+                    <option value="admin">Administrador</option>
+                    <option value="user">Usuario</option>
+                </select>
+                <button type="submit">{{ isEditing ? 'Actualizar' : 'Guardar' }}</button>
+                <button type="button" (click)="cancelEdit()">Cancelar</button>
+            </form>
+        </div>
+    </div>
+</div>

@@ -7,7 +7,7 @@ import { AdminLayoutComponent } from "./components/admin-layout/admin-layout.com
 
 @Component({
   selector: 'app-root',
-  standalone: true,
+  standalone: true,  
   imports: [RouterOutlet, LoginComponent, DashboardAdminComponent, SpaceManagementComponent, AdminLayoutComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'

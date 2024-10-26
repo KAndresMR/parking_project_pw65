@@ -1,1 +1,61 @@
-<p>contract-management works!</p>
+<div class="contracts-management-container">
+    <header class="contracts-header">
+        <h1>Gestión de Contratos</h1>
+        <p>Aquí puedes gestionar los contratos activos y sus detalles.</p>
+    </header>
+
+    <div class="contracts-content">
+        <!-- Filtros y Búsqueda -->
+        <div class="filter-bar">
+            <input type="text" placeholder="Buscar por nombre o ID del contrato..." />
+            <select>
+                <option value="">Todos</option>
+                <option value="activo">Activo</option>
+                <option value="inactivo">Inactivo</option>
+            </select>
+        </div>
+
+        <!-- Tabla de Contratos -->
+        <table class="contracts-table">
+            <thead>
+                <tr>
+                    <th>ID del Contrato</th>
+                    <th>Nombre del Cliente</th>
+                    <th>Fecha de Inicio</th>
+                    <th>Fecha de Expiración</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let contract of contracts">
+                    <td>{{ contract.id }}</td>
+                    <td>{{ contract.clientName }}</td>
+                    <td>{{ contract.startDate }}</td>
+                    <td>{{ contract.endDate }}</td>
+                    <td>{{ contract.status }}</td>
+                    <td>
+                        <button (click)="editContract(contract)">Editar</button>
+                        <button (click)="deleteContract(contract)">Eliminar</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Formulario para Añadir o Editar Contrato -->
+        <div class="contract-form">
+            <h2>{{ isEditing ? 'Editar Contrato' : 'Añadir Nuevo Contrato' }}</h2>
+            <form (submit)="saveContract()">
+                <input type="text" [(ngModel)]="contractForm.clientName" placeholder="Nombre del Cliente" required />
+                <input type="date" [(ngModel)]="contractForm.startDate" placeholder="Fecha de Inicio" required />
+                <input type="date" [(ngModel)]="contractForm.endDate" placeholder="Fecha de Expiración" required />
+                <select [(ngModel)]="contractForm.status" required>
+                    <option value="Activo">Activo</option>
+                    <option value="Inactivo">Inactivo</option>
+                </select>
+                <button type="submit">{{ isEditing ? 'Actualizar' : 'Guardar' }}</button>
+                <button type="button" (click)="cancelEdit()">Cancelar</button>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,107 @@
+.users-management-container {
+    padding: 20px;
+    color: #333;
+
+    .users-header {
+        text-align: center;
+        margin-bottom: 20px;
+
+        h1 {
+            color: #1E40AF;
+        }
+    }
+
+    .filter-bar {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+
+        input,
+        select {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+    }
+
+    .users-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+
+        th,
+        td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f4f4f4;
+        }
+
+        tr:hover {
+            background-color: #f9f9f9;
+        }
+
+        button {
+            padding: 6px 12px;
+            margin: 0 4px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+
+            &:first-of-type {
+                background-color: #4CAF50;
+                color: #fff;
+            }
+
+            &:last-of-type {
+                background-color: #f44336;
+                color: #fff;
+            }
+        }
+    }
+
+    .user-form {
+        margin-top: 30px;
+
+        h2 {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+
+            input,
+            select {
+                padding: 8px;
+                font-size: 14px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+            }
+
+            button {
+                padding: 10px;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 14px;
+                color: #fff;
+
+                &:first-of-type {
+                    background-color: #4CAF50;
+                }
+
+                &:last-of-type {
+                    background-color: #f44336;
+                }
+            }
+        }
+    }
+}

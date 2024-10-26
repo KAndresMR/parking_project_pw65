@@ -1,1 +1,47 @@
-<p>work-schedule works!</p>
+<div class="horario-trabajo">
+    <header class="schedule-header">
+        <h1>Horario de Trabajo</h1>
+    </header>    
+    <table>
+        <thead>
+            <tr>
+                <th>Día</th>
+                <th>Hora de Inicio</th>
+                <th>Hora de Fin</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let horario of horarios">
+                <td>{{ horario.dia }}</td>
+                <td>{{ horario.inicio }}</td>
+                <td>{{ horario.fin }}</td>
+                <td>
+                    <button (click)="editarHorario(horario)">Editar</button>
+                    <button (click)="eliminarHorario(horario)">Eliminar</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <button (click)="abrirFormulario()">Agregar Horario</button>
+</div>
+
+<div class="modal" *ngIf="formularioVisible">
+    <h3>{{ editar ? 'Editar Horario' : 'Agregar Horario' }}</h3>
+    <form (ngSubmit)="guardarHorario()">
+        <label>
+            Día:
+            <input type="text" [(ngModel)]="horarioSeleccionado.dia" name="dia" required>
+        </label>
+        <label>
+            Hora de Inicio:
+            <input type="time" [(ngModel)]="horarioSeleccionado.inicio" name="inicio" required>
+        </label>
+        <label>
+            Hora de Fin:
+            <input type="time" [(ngModel)]="horarioSeleccionado.fin" name="fin" required>
+        </label>
+        <button type="submit">Guardar</button>
+        <button type="button" (click)="cerrarFormulario()">Cancelar</button>
+    </form>
+</div>
