@@ -1,0 +1,95 @@
+.admin-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+  
+    .admin-header {
+      background-color: #1E40AF;
+      color: white;
+      padding: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+  
+      button {
+        background-color: transparent;
+        border: none;
+        color: white;
+        cursor: pointer;
+        font-size: 16px;
+      }
+    }
+  
+    .admin-content {
+      display: flex;
+      flex: 1;
+  
+      .admin-sidebar {
+        width: 200px;
+        background-color: #f2f2f2;
+        padding: 10px;
+  
+        ul {
+          list-style-type: none;
+          padding: 0;
+  
+          li {
+            padding: 10px;
+            cursor: pointer;
+  
+            &:hover {
+              background-color: #e0e0e0;
+            }
+          }
+        }
+      }
+  
+      .main-panel {
+        flex: 1;
+        padding: 20px;
+  
+        .stats {
+          display: flex;
+          justify-content: space-between;
+  
+          .stat-card {
+            background-color: #e7f3fe;
+            padding: 20px;
+            border-radius: 5px;
+            flex: 1;
+            margin-right: 10px;
+  
+            &:last-child {
+              margin-right: 0;
+            }
+          }
+        }
+  
+        .quick-actions {
+          margin-top: 20px;
+  
+          button {
+            margin-right: 10px;
+            padding: 10px 20px;
+            background-color: #1E40AF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+  
+            &:hover {
+              background-color: #0d4a95;
+            }
+          }
+        }
+      }
+    }
+  
+    .admin-footer {
+      text-align: center;
+      padding: 10px;
+      background-color: #1E40AF;
+      color: white;
+    }
+  }
+  

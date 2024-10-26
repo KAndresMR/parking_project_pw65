@@ -1,0 +1,33 @@
+<div class="admin-container">
+  <header class="admin-header">
+    <h1>PARQUEADERO</h1>
+    <button (click)="logout()">Cerrar Sesión</button>
+  </header>
+  <div class="admin-content">
+    <nav class="admin-sidebar">
+      <ul>
+        <li (click)="goTo('espacios')">Gestión de Espacios</li>
+        <li (click)="goTo('contratos')">Gestión de Contratos</li>
+        <li (click)="goTo('usuarios')">Gestión de Usuarios</li>
+        <li (click)="goTo('horario')">Horario de Trabajo</li>
+      </ul>
+    </nav>
+    <main class="main-panel">
+      <h2>Bienvenido, {{ adminName }}</h2>
+      <p>Aquí puedes gestionar todos los aspectos del parqueadero.</p>
+      <div class="stats">
+        <div class="stat-card">Espacios Ocupados: {{ occupiedSpaces }}</div>
+        <div class="stat-card">Usuarios Registrados: {{ registeredUsers }}</div>
+        <div class="stat-card">Contratos Activos: {{ activeContracts }}</div>
+      </div>
+      <div class="quick-actions">
+        <button (click)="createContract()">Crear Nuevo Contrato</button>
+        <button (click)="addSpace()">Añadir Espacio</button>
+        <button (click)="manageUsers()">Gestionar Usuarios</button>
+      </div>
+    </main>
+  </div>
+  <footer class="admin-footer">
+    <p>Contacto: soporteparqueadero.com</p>
+  </footer>
+</div>
