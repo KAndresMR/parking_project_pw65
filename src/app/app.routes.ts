@@ -6,9 +6,11 @@ import { DashboardAdminComponent } from './components/dashboard-admin/dashboard-
 import { ContractManagementComponent } from './components/contract-management/contract-management.component';
 import { UserManagementComponent } from './components/user-management/user-management.component';
 import { WorkScheduleComponent } from './components/work-schedule/work-schedule.component';
+import { RegisterComponent } from './components/register/register.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },   // Ruta para el login
+  { path: 'register', component: RegisterComponent },   // Ruta para el registro
     {
         path: 'admin',
         component: AdminLayoutComponent,

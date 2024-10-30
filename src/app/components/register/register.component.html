@@ -1,0 +1,23 @@
+<form [formGroup]="registerForm" (ngSubmit)="onRegister()">
+  <div>
+    <label for="name">Nombre</label>
+    <input id="name" formControlName="name" required/>
+    <div *ngIf="registerForm.get('name')?.errors?.['required']">El nombre es requerido.</div>
+  </div>
+  
+  <div>
+    <label for="email">Correo</label>
+    <input id="email" formControlName="email" required/>
+    <div *ngIf="registerForm.get('email')?.errors?.['required']">El correo es requerido.</div>
+    <div *ngIf="registerForm.get('email')?.errors?.['email']">El correo no es válido.</div>
+  </div>
+  
+  <div>
+    <label for="password">Contraseña</label>
+    <input id="password" type="password" formControlName="password" required/>
+    <div *ngIf="registerForm.get('password')?.errors?.['required']">La contraseña es requerida.</div>
+    <div *ngIf="registerForm.get('password')?.errors?.['minlength']">La contraseña debe tener al menos 6 caracteres.</div>
+  </div>
+
+  <button type="submit">Registrar</button>
+</form>

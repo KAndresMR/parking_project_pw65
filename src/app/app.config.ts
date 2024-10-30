@@ -6,9 +6,10 @@ import { provideHttpClient } from '@angular/common/http';
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { provideFirebaseApp } from '@angular/fire/app';
-import { provideAuth } from '@angular/fire/auth';
+import { provideAuth, getAuth as getAuth_alias } from '@angular/fire/auth';
+import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 
-const firebaseConfig = {
+const firebaseConfig = {  
   apiKey: "AIzaSyA3D0BelX8E83MltePUUWJ5Fl50fRZOBeI",
   authDomain: "parkingppwp65.firebaseapp.com",
   projectId: "parkingppwp65",
@@ -21,8 +22,8 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),     
     provideHttpClient(),
-
     provideFirebaseApp(() => initializeApp(firebaseConfig)),
-    provideAuth(()  => getAuth())
+    provideAuth(()  => getAuth()),
+    provideFirestore(() => getFirestore())
   ],
 };
