@@ -1,45 +1,90 @@
 import { inject, Injectable } from '@angular/core';
-import { Auth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, User, user, createUserWithEmailAndPassword } from '@angular/fire/auth';
+import { Auth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, user, createUserWithEmailAndPassword } from '@angular/fire/auth';
 import { from, Observable, of } from 'rxjs';
-import { getIdTokenResult } from 'firebase/auth';
-import { map } from 'rxjs/operators';
+import { catchError, switchMap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { Firestore } from '@angular/fire/firestore';
-import { doc, setDoc } from 'firebase/firestore';
-  // Asegúrate de tener un modelo de usuario
+import { doc, getDoc, setDoc } from 'firebase/firestore';
+  
 
 @Injectable({
   providedIn: 'root'
 })
-export class AuthenticationService {
-  // Inyección de dependencias para Firebase Authentication
+export class AuthenticationService {  
   firebaseAuth = inject(Auth);  
-  // Inyección de Firestore
-  private firestore = inject(Firestore);
-  // Observable que emite el usuario autenticado
+  private firestore = inject(Firestore); 
   user$ = user(this.firebaseAuth);
 
-  constructor(private router: Router) { }
+  constructor(
+    private router: Router,
+    private auth: Auth,    
+  ) { }
 
-  login(email: string, password: string): Observable<any> {
-    return from(signInWithEmailAndPassword(this.firebaseAuth, email, password));
+  // Método para iniciar sesión y obtener el rol
+  login(email: string, password: string): Observable<string | null> {
+    return from(signInWithEmailAndPassword(this.auth, email, password)).pipe(
+      switchMap(async (userCredential) => {
+        const user = userCredential.user;
+        if (user) {
+          const role = await this.getUserRole(user.uid);
+          if (role) {
+            // Redirige según el rol
+            if (role === 'administrador') {
+              this.router.navigate(['/admin']);
+            } else {
+              this.router.navigate(['/profile']);
+            }
+          }
+          return role;
+        }
+        return null;
+      })
+      
+    );
   }
 
-  loginWithGoogle(): Observable<any> {
+  loginWithGoogle(): Observable<void> {
     const provider = new GoogleAuthProvider();
-    return from(signInWithPopup(this.firebaseAuth, provider));
+    return from(signInWithPopup(this.firebaseAuth, provider)).pipe(
+      switchMap(async (userCredential) => {
+        const user = userCredential.user;
+        if (user) {
+          // Referencia al documento del usuario en Firestore
+          const userRef = doc(this.firestore, `users/${user.uid}`);
+          const userSnapshot = await getDoc(userRef);
+  
+          // Si el usuario no existe en Firestore, se crea con el rol 'cliente'
+          if (!userSnapshot.exists()) {
+            await setDoc(userRef, {
+              uid: user.uid,
+              email: user.email,
+              name: user.displayName || '',
+              role: 'cliente'
+            });
+          }
+  
+          // Redirige siempre a la pantalla de cliente
+          this.router.navigate(['/register']);
+        }
+      }),
+      catchError((error) => {
+        console.error('Error al iniciar sesión con Google:', error);
+        return of(undefined); // Retorna un valor sin error
+      })
+    );
   }
+  
 
-  // Método para obtener el rol del usuario autenticado
-  getUserRole(): Observable<string | null> {
-    const currentUser = this.firebaseAuth.currentUser;
-    if (currentUser) {
-      return from(getIdTokenResult(currentUser)).pipe(
-        map(idTokenResult => (idTokenResult.claims['role'] as string) || null) // Ajuste de tipo aquí
-      );
+   // Método para obtener el rol del usuario desde Firestore
+   private async getUserRole(uid: string): Promise<string | null> {
+    const userDoc = doc(this.firestore, `users/${uid}`);
+    const userSnapshot = await getDoc(userDoc);
+    if (userSnapshot.exists()) {
+      const userData = userSnapshot.data();
+      return userData['role'] as string || null;
     }
-    return of(null);
-  }
+    return null;
+  } 
 
   logout(): Observable<void> {
     return from(this.firebaseAuth.signOut());
@@ -66,6 +111,12 @@ export class AuthenticationService {
       console.error('Error en el registro:', error);
       throw error;
     }
+  }
+
+  // Método para obtener el ID del usuario actual
+  getCurrentUserId(): string | null {
+    const user = this.auth.currentUser; // Obtiene el usuario actual
+    return user ? user.uid : null; // Retorna el ID del usuario o null si no hay usuario autenticado
   }
 
 }

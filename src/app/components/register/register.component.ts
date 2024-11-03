@@ -4,9 +4,6 @@ import { RouterLink } from '@angular/router';
 import { AuthenticationService } from '../../services/authentication.service';
 import { CommonModule } from '@angular/common';
 
-
-
-
 @Component({
   selector: 'app-register',
   standalone: true,

@@ -17,36 +17,47 @@ export class LoginComponent {
   router = inject(Router);
   error: string | null = null;
 
-  form = this.fb.group({
-    email: ['', Validators.required],
-    password: ['', Validators.required],
-  });
+  
 
-  onSubmit(): void {
-    const { email, password } = this.form.value;
-    if (email && password) {
+  form = this.fb.group({
+    email: ['', [Validators.required, Validators.email]],
+    password: ['', [Validators.required, Validators.minLength(6)]],
+  });
+  
+
+  onLogin() {
+    if (this.form.valid) {
+      const email = this.form.value.email as string;
+      const password = this.form.value.password as string;
+      console.log('Iniciando sesión con:', email);
+  
       this.authService.login(email, password).subscribe({
-        next: () => this.redirectUser(),
-        error: () => this.error = 'Error en las credenciales'
+        next: (role) => {
+          console.log('Rol obtenido:', role);
+        },
+        error: (error) => {
+          this.error = 'Error en el inicio de sesión. Verifica tus credenciales.';
+          console.error(error);
+        }
       });
+    } else {
+      this.error = 'Por favor ingresa un correo y contraseña válidos.';
     }
   }
+  
 
   loginWithGoogle() {
     this.authService.loginWithGoogle().subscribe({
-      next: () => this.redirectUser(),
-      error: () => (this.error = 'Error al iniciar sesión con Google')
-    });
-  }
-
-  redirectUser() {
-    this.authService.getUserRole().subscribe(role => {
-      if (role === 'admin') {
-        this.router.navigate(['/admin']);
-      } else {
-        this.router.navigate(['/admin']);
+      next: () => {
+        console.log('Inicio de sesión exitoso con Google y redirigido a cliente.');
+      },
+      error: (error) => {
+        this.error = 'Error al iniciar sesión con Google.';
+        console.error(error);
       }
     });
   }
+  
+  
 
 }

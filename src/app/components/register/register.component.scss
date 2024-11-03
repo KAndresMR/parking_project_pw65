@@ -13,9 +13,16 @@
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     width: 100%;
-    max-width: 400px;
+    max-width: 500px;
     display: flex;
     flex-direction: column;
+  }
+
+  .create_account {
+    text-align: center;
+    color: #ffffff;
+    font: 100;
+    background-color: #007bff;
   }
   
   h2 {
@@ -39,6 +46,7 @@
     border-radius: 4px;
     font-size: 1rem;
     transition: border-color 0.3s;
+    width: 250px;
   }
   
   input:focus {

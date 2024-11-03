@@ -7,10 +7,13 @@ import { ContractManagementComponent } from './components/contract-management/co
 import { UserManagementComponent } from './components/user-management/user-management.component';
 import { WorkScheduleComponent } from './components/work-schedule/work-schedule.component';
 import { RegisterComponent } from './components/register/register.component';
+import { ProfileComponent } from './components/Dashboard_customer/profile/profile.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },   // Ruta para el login
   { path: 'register', component: RegisterComponent },   // Ruta para el registro
+  { path: 'profile', component: ProfileComponent },   // Ruta para el registro
+
     {
         path: 'admin',
         component: AdminLayoutComponent,
