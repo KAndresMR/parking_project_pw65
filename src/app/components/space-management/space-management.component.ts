@@ -28,13 +28,7 @@ export class SpaceManagementComponent implements OnInit{
   };
 
   // Lista de espacios de parqueo
-  spaces: Space[] = [
-    { id: '1', number: 1, status: 'Disponible', type: 'Normal', price: 5 },
-    { id: '2', number: 2, status: 'Ocupado', type: 'Normal', price: 5 },
-    { id: '3', number: 3, status: 'Disponible', type: 'Discapacitados', price: 7 },
-    { id: '4', number: 4, status: 'Ocupado', type: 'Normal', price: 5 },
-    { id: '5', number: 5, status: 'Disponible', type: 'Normal', price: 5 }
-  ];
+  spaces: Space[] = [];
   
   constructor(private spaceService: SpaceService) {}
 

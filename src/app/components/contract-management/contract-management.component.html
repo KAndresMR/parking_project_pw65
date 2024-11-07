@@ -7,8 +7,8 @@
     <div class="contracts-content">
         <!-- Filtros y Búsqueda -->
         <div class="filter-bar">
-            <input type="text" placeholder="Buscar por nombre o ID del contrato..." />
-            <select>
+            <input type="text" placeholder="Buscar por nombre o ID del contrato..." [(ngModel)]="searchText" />
+            <select [(ngModel)]="filterStatus" >
                 <option value="">Todos</option>
                 <option value="activo">Activo</option>
                 <option value="inactivo">Inactivo</option>
@@ -28,7 +28,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let contract of contracts">
+                <tr *ngFor="let contract of filteredContracts">
                     <td>{{ contract.id }}</td>
                     <td>{{ contract.clientName }}</td>
                     <td>{{ contract.startDate }}</td>
@@ -46,10 +46,10 @@
         <div class="contract-form">
             <h2>{{ isEditing ? 'Editar Contrato' : 'Añadir Nuevo Contrato' }}</h2>
             <form (submit)="saveContract()">
-                <input type="text" [(ngModel)]="contractForm.clientName" placeholder="Nombre del Cliente" required />
-                <input type="date" [(ngModel)]="contractForm.startDate" placeholder="Fecha de Inicio" required />
-                <input type="date" [(ngModel)]="contractForm.endDate" placeholder="Fecha de Expiración" required />
-                <select [(ngModel)]="contractForm.status" required>
+                <input type="text" [(ngModel)]="contractForm.clientName" placeholder="Nombre del Cliente" name = "clientName" required />
+                <input type="date" [(ngModel)]="contractForm.startDate" placeholder="Fecha de Inicio"  name = "startDate" required />
+                <input type="date" [(ngModel)]="contractForm.endDate" placeholder="Fecha de Expiración" name = "endDate" required />
+                <select [(ngModel)]="contractForm.status" name ="status" required>
                     <option value="Activo">Activo</option>
                     <option value="Inactivo">Inactivo</option>
                 </select>
