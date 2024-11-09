@@ -13,9 +13,9 @@
         </thead>
         <tbody>
             <tr *ngFor="let horario of horarios">
-                <td>{{ horario.dia }}</td>
-                <td>{{ horario.inicio }}</td>
-                <td>{{ horario.fin }}</td>
+                <td>{{ horario.day }}</td>
+                <td>{{ horario.start }}</td>
+                <td>{{ horario.end }}</td>
                 <td>
                     <button (click)="editarHorario(horario)">Editar</button>
                     <button (click)="eliminarHorario(horario)">Eliminar</button>
@@ -23,7 +23,7 @@
             </tr>
         </tbody>
     </table>
-    <button (click)="abrirFormulario()">Agregar Horario</button>
+    <button (click)="abrirFormulario()">Agregar Horario</button>    
 </div>
 
 <div class="modal" *ngIf="formularioVisible">
@@ -31,15 +31,15 @@
     <form (ngSubmit)="guardarHorario()">
         <label>
             Día:
-            <input type="text" [(ngModel)]="horarioSeleccionado.dia" name="dia" required>
+            <input type="text" [(ngModel)]="horarioSeleccionado.day" name="dia" required>
         </label>
         <label>
             Hora de Inicio:
-            <input type="time" [(ngModel)]="horarioSeleccionado.inicio" name="inicio" required>
+            <input type="time" [(ngModel)]="horarioSeleccionado.start" name="inicio" required>
         </label>
         <label>
             Hora de Fin:
-            <input type="time" [(ngModel)]="horarioSeleccionado.fin" name="fin" required>
+            <input type="time" [(ngModel)]="horarioSeleccionado.end" name="fin" required>
         </label>
         <button type="submit">Guardar</button>
         <button type="button" (click)="cerrarFormulario()">Cancelar</button>

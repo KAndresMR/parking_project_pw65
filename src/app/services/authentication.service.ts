@@ -1,10 +1,11 @@
 import { inject, Injectable } from '@angular/core';
 import { Auth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, user, createUserWithEmailAndPassword } from '@angular/fire/auth';
 import { from, Observable, of } from 'rxjs';
-import { catchError, switchMap } from 'rxjs/operators';
+import { catchError, map, switchMap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { Firestore } from '@angular/fire/firestore';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { User } from '../models/user.model';
   
 
 @Injectable({
@@ -117,6 +118,21 @@ export class AuthenticationService {
   getCurrentUserId(): string | null {
     const user = this.auth.currentUser; // Obtiene el usuario actual
     return user ? user.uid : null; // Retorna el ID del usuario o null si no hay usuario autenticado
+  }
+
+  getCurrentUser(): Observable<User | null> {
+    const currentUser = this.auth.currentUser;
+    if (currentUser) {
+      const userRef = doc(this.firestore, 'users', currentUser.uid);
+      return from(getDoc(userRef)).pipe(
+        map((snapshot) => (snapshot.exists() ? snapshot.data() as User : null))
+      );
+    }
+    return of(null); // Retorna null si no hay usuario autenticado
+  }
+
+  logoutt(): Observable<void> {
+    return from(this.firebaseAuth.signOut());
   }
 
 }
