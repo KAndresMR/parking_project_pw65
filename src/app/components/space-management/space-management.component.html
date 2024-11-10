@@ -60,6 +60,9 @@
                     <option value="Discapacitados">Discapacitados</option>
                 </select>
                 <input type="number" [(ngModel)]="spaceForm.price" placeholder="Precio por hora" name = "price" required />
+                    <div *ngIf="message" class="success-message">
+                        {{ message }}
+                    </div>
                 <button type="submit">{{ isEditing ? 'Actualizar' : 'Guardar' }}</button>
                 <button type="button" (click)="cancelEdit()">Cancelar</button>
             </form>

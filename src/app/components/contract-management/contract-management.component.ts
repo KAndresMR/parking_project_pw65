@@ -14,6 +14,7 @@ import { ContractService } from '../../services/contract.service';
 export class ContractManagementComponent implements OnInit{
 
   contracts: Contract[] = [];
+  message: string | null = null;
 
   contractForm: Contract = {
     id: '',
@@ -41,8 +42,12 @@ export class ContractManagementComponent implements OnInit{
 
   async saveContract() {
     if (this.isEditing) {
+      this.message = 'Contrato actualizado exitosamente';
+        setTimeout(() => (this.message = null), 3000);
       await this.contractService.updateContract(this.contractForm.id.toString(), this.contractForm);
     } else {
+      this.message = 'Contrato registrado exitosamente';
+        setTimeout(() => (this.message = null), 3000);
       await this.contractService.addContract(this.contractForm);
     }
     this.resetForm();

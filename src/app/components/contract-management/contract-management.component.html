@@ -53,6 +53,9 @@
                     <option value="Activo">Activo</option>
                     <option value="Inactivo">Inactivo</option>
                 </select>
+                <div *ngIf="message" class="success-message">
+                    {{ message }}
+                </div>
                 <button type="submit">{{ isEditing ? 'Actualizar' : 'Guardar' }}</button>
                 <button type="button" (click)="cancelEdit()">Cancelar</button>
             </form>

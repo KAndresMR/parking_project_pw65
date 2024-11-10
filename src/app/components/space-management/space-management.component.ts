@@ -17,6 +17,7 @@ export class SpaceManagementComponent implements OnInit{
   searchNumber: string = '';
   filterStatus: string = '';
   filterType: string = '';
+  message: string | null = null;
 
   // Variable para almacenar los datos del espacio en el formulario
   spaceForm: Space = {
@@ -68,6 +69,8 @@ export class SpaceManagementComponent implements OnInit{
 
   saveSpace() {
     if (this.isEditing) {
+      this.message = 'Espacio actualizado exitosamente';
+        setTimeout(() => (this.message = null), 3000);
       // Actualizar espacio existente
       this.spaceService.updateSpace(this.spaceForm.id!, this.spaceForm).then(() => {
         this.isEditing = false;
@@ -75,7 +78,9 @@ export class SpaceManagementComponent implements OnInit{
         this.loadSpaces();
       });
     } else {
-      // Crear nuevo espacio
+      this.message = 'Espacio registrado exitosamente';
+        setTimeout(() => (this.message = null), 3000);
+      // Crear nuevo espacio      
       this.spaceService.addSpace(this.spaceForm).then(() => {
         this.resetForm();
         this.loadSpaces();

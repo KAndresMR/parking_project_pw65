@@ -23,5 +23,9 @@
     <div *ngIf="registerForm.get('password')?.errors?.['minlength']">La contraseña debe tener al menos 6 caracteres.</div>
   </div>
 
+  <div *ngIf="message" class="success-message">
+    {{ message }}
+  </div>
+
   <button type="submit">Registrar</button>
 </form>

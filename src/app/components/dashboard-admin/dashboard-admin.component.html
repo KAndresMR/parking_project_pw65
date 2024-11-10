@@ -1,16 +1,9 @@
 <div class="admin-container">
   <header class="admin-header">
-    <h1>PARQUEADERO</h1>
-    <button (click)="logout()">Cerrar Sesión</button>
+    <h1>PARQUEADERO</h1>    
   </header>
   <div class="admin-content">
-    <nav class="admin-sidebar">
-      <ul>
-        <li (click)="goTo('espacios')">Gestión de Espacios</li>
-        <li (click)="goTo('contratos')">Gestión de Contratos</li>
-        <li (click)="goTo('usuarios')">Gestión de Usuarios</li>
-        <li (click)="goTo('horario')">Horarios de Trabajo</li>
-      </ul>
+    <nav class="admin-sidebar">      
     </nav>
     <main class="main-panel">
       <h2>Bienvenido, {{ adminName }}</h2>

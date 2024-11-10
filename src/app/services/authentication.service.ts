@@ -6,6 +6,8 @@ import { Router } from '@angular/router';
 import { Firestore } from '@angular/fire/firestore';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { User } from '../models/user.model';
+
+
   
 
 @Injectable({
@@ -17,8 +19,9 @@ export class AuthenticationService {
   user$ = user(this.firebaseAuth);
 
   constructor(
+    
     private router: Router,
-    private auth: Auth,    
+    private auth: Auth,        
   ) { }
 
   // Método para iniciar sesión y obtener el rol
@@ -65,7 +68,7 @@ export class AuthenticationService {
           }
   
           // Redirige siempre a la pantalla de cliente
-          this.router.navigate(['/register']);
+          this.router.navigate(['/profile']);
         }
       }),
       catchError((error) => {
@@ -91,11 +94,12 @@ export class AuthenticationService {
     return from(this.firebaseAuth.signOut());
   }
 
-  async registerUser(email: string, password: string, name: string) {
-    console.log('Registrando usuario:', email);
+  async registerUser(email: string, password: string, name: string) {        
     try {
       const userCredential = await createUserWithEmailAndPassword(this.firebaseAuth, email, password); // Cambiar a createUserWithEmailAndPassword
       const user = userCredential.user;
+
+      
 
       // Guardar información adicional del usuario en Firestore
       if (user) {
@@ -107,7 +111,7 @@ export class AuthenticationService {
           role: 'cliente' // Rol predeterminado
         });
         this.router.navigate(['/login']); // Redirige al usuario al login después del registro
-      }
+      }      
     } catch (error) {
       console.error('Error en el registro:', error);
       throw error;

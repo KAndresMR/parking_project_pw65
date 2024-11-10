@@ -14,6 +14,8 @@ import { CommonModule } from '@angular/common';
 export class RegisterComponent implements OnInit{
   registerForm!: FormGroup;
   errorMessage: string = '';
+  message: string | null = null;
+
   
 
   constructor(
@@ -34,7 +36,9 @@ export class RegisterComponent implements OnInit{
     if ( this.registerForm.valid ) {
       const { name, email, password } = this.registerForm.value;
       try {
-        await this.authService.registerUser(email, password, name);
+        this.message = 'Usuario registrado exitosamente';
+        setTimeout(() => (this.message = null), 3000);
+        await this.authService.registerUser(email, password, name);        
       } catch (error: any) { // Cambia 'error' a 'error: any'
         this.errorMessage = error.message || 'Ocurrió un error en el registro.';
       }
