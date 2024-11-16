@@ -27,7 +27,16 @@
                 </tr>
             </thead>
             <tbody>
-                
+                <tr *ngFor="let user of users">
+                    <td>{{ user.name }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.role }}</td>
+                    <td>{{ user.uid }}</td>                    
+                    <td>
+                        <button (click)="editUser(user)">Editar</button>
+                        <button (click)="deleteUser(user)">Eliminar</button>
+                    </td>
+                </tr>
             </tbody>
         </table>
 
@@ -35,9 +44,9 @@
         <div class="user-form">
             <h2>{{ isEditing ? 'Editar Usuario' : 'Añadir Nuevo Usuario' }}</h2>
             <form (submit)="saveUser()">
-                <input type="text" [(ngModel)]="userForm.name" placeholder="Nombre Completo" required />
-                <input type="email" [(ngModel)]="userForm.email" placeholder="Email" required />
-                <select [(ngModel)]="userForm.role" required>
+                <input type="text" [(ngModel)]="userForm.name" name="name" placeholder="Nombre Completo" required />
+                <input type="email" [(ngModel)]="userForm.email" name="email" placeholder="Email" required />
+                <select [(ngModel)]="userForm.role" name="role" required>
                     <option value="admin">Administrador</option>
                     <option value="user">Usuario</option>
                 </select>

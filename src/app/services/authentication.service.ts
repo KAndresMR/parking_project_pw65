@@ -8,8 +8,6 @@ import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { User } from '../models/user.model';
 
 
-  
-
 @Injectable({
   providedIn: 'root'
 })

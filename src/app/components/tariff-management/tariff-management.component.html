@@ -1,0 +1,53 @@
+<h2>Gestión de Tarifas</h2>
+
+<form (ngSubmit)="onSubmit()" #tariffForm="ngForm">
+  <!-- Selección del tipo de tarifa -->
+  <label for="type">Tipo de tarifa</label>
+  <select [(ngModel)]="newTariff.type" name="type" required>
+    <option value="" disabled selected>Seleccione el tipo</option>
+    <option value="día">Día</option>
+    <option value="mes">Mes</option>
+    <option value="año">Año</option>
+  </select>
+  
+  <!-- Campo de descripción -->
+  <label for="description">Descripción</label>
+  <input type="text" [(ngModel)]="newTariff.description" name="description" placeholder="Descripción de la tarifa" required />
+
+  <!-- Campo de valor de la tarifa -->
+  <label for="value">Valor</label>
+  <input type="number" [(ngModel)]="newTariff.value" name="value" placeholder="Valor" required />
+
+  <!-- Botón de agregar o actualizar tarifa -->
+  <button type="submit">{{ editMode ? 'Actualizar' : 'Agregar' }} Tarifa</button>
+</form>
+
+<!-- Mensaje de éxito -->
+<div *ngIf="messageVisible" class="success-message">
+  Tarifa creada exitosamente
+</div>
+
+<!-- Tabla de tarifas -->
+<table>
+  <thead>
+    <tr>
+      <th>Tipo</th>
+      <th>Descripcion</th>
+      <th>Valor</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let tariff of tariffs">
+      <td>{{ tariff.type }}</td>
+      <td>{{ tariff.description }}</td>
+      <td>{{ tariff.value | currency }}</td>
+      <td>
+        <!-- Botones de acciones (editar, eliminar, etc.) -->
+        <button (click)="editTariff(tariff)">Editar</button>
+        <button (click)="deleteTariff(tariff)">Eliminar</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
