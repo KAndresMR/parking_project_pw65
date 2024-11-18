@@ -17,6 +17,9 @@
                 <option value="">Todos</option>
                 <option value="normal">Normal</option>
                 <option value="discapacitados">Discapacitados</option>
+                <option value="cubierto">Cubierto</option>
+                <option value="descubierto">Descubierto</option>
+                <option value="vip">VIP</option>
             </select>
         </div>
 
@@ -26,8 +29,7 @@
                 <tr>
                     <th>Número de Espacio</th>
                     <th>Estado</th>
-                    <th>Tipo de Espacio</th>
-                    <th>Precio</th>
+                    <th>Tipo de Espacio</th>                    
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -35,12 +37,9 @@
                 <tr *ngFor="let space of getFilteredSpaces()">
                     <td>{{ space.number }}</td>
                     <td>{{ space.status }}</td>
-                    <td>{{ space.type }}</td>
-                    <td>{{ space.price }}</td>
+                    <td>{{ space.type }}</td>                    
                     <td>
-                        <button (click)="editSpace(space)">Editar</button>
-                        <button *ngIf="space.status === 'Disponible'" (click)="reserveSpace(space)">Reservar</button>
-                        <button *ngIf="space.status === 'Ocupado'" (click)="freeSpace(space)">Liberar</button>
+                        <button (click)="editSpace(space)">Editar</button>                                            
                     </td>
                 </tr>
             </tbody>
@@ -58,8 +57,11 @@
                 <select [(ngModel)]="spaceForm.type" name = "type" required>
                     <option value="Normal">Normal</option>
                     <option value="Discapacitados">Discapacitados</option>
+                    <option value="Cubierto">Cubierto</option>
+                    <option value="Descubierto">Descubierto</option>
+                    <option value="VIP">VIP</option>
                 </select>
-                <input type="number" [(ngModel)]="spaceForm.price" placeholder="Precio por hora" name = "price" required />
+                
                     <div *ngIf="message" class="success-message">
                         {{ message }}
                     </div>

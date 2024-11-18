@@ -60,8 +60,10 @@ export class AuthenticationService {
             await setDoc(userRef, {
               uid: user.uid,
               email: user.email,
+              password: 'admin123',
               name: user.displayName || '',
-              role: 'cliente'
+              role: 'cliente',
+              state: 'N/D'
             });
           }
   

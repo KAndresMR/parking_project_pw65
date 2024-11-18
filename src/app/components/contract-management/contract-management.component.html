@@ -23,6 +23,7 @@
                     <th>Nombre del Cliente</th>
                     <th>Fecha de Inicio</th>
                     <th>Fecha de Expiración</th>
+                    <th>Espacio</th>
                     <th>Estado</th>
                     <th>Acciones</th>
                 </tr>
@@ -33,6 +34,7 @@
                     <td>{{ contract.clientName }}</td>
                     <td>{{ contract.startDate }}</td>
                     <td>{{ contract.endDate }}</td>
+                    <td>{{ contract.space }}</td>
                     <td>{{ contract.status }}</td>
                     <td>
                         <button (click)="editContract(contract)">Editar</button>
@@ -45,10 +47,32 @@
         <!-- Formulario para Añadir o Editar Contrato -->
         <div class="contract-form">
             <h2>{{ isEditing ? 'Editar Contrato' : 'Añadir Nuevo Contrato' }}</h2>
-            <form (submit)="saveContract()">
-                <input type="text" [(ngModel)]="contractForm.clientName" placeholder="Nombre del Cliente" name = "clientName" required />
+            <form (submit)="saveContract()">                
+                <div>
+                    <label>Cliente:</label>
+                    <input
+                        type="text"
+                        name="lblClient"
+                        [value]="selectedClientName"
+                        placeholder="Selecciona un cliente"
+                        readonly
+                        (click)="openClientModal()"
+                    />
+                </div>
+                <h3>Fecha en la que Inicia el contrato</h3>
                 <input type="date" [(ngModel)]="contractForm.startDate" placeholder="Fecha de Inicio"  name = "startDate" required />
+                <h3>Fecha en la que Termina el contrato</h3>
                 <input type="date" [(ngModel)]="contractForm.endDate" placeholder="Fecha de Expiración" name = "endDate" required />
+                <div>
+                    <label>Espacio:</label>
+                    <input
+                    [value]="selectedSpaceNum"
+                        type="text"
+                        placeholder="Selecciona un espacio"
+                        readonly
+                        (click)="openSpaceModal()"
+                    />
+                </div>                
                 <select [(ngModel)]="contractForm.status" name ="status" required>
                     <option value="Activo">Activo</option>
                     <option value="Inactivo">Inactivo</option>
@@ -60,5 +84,57 @@
                 <button type="button" (click)="cancelEdit()">Cancelar</button>
             </form>
         </div>
+    </div>
+</div>
+
+<!-- Modal para seleccionar cliente -->
+<div *ngIf="isClientModalOpen" class="client-modal">
+    <div class="modal-content">
+        <h2>Seleccionar Cliente</h2>
+        <table class="users-table">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Email</th>
+                    <th>Rol</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let user of clients "(click)="selectClient(user)">
+                    <td>{{ user.name }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.role }}</td>
+                    <td>{{ user.state }}</td>                                                            
+                </tr>
+            </tbody>
+        </table>
+        <button (click)="closeClientModal()">Cerrar</button>
+    </div>
+</div>
+
+
+
+<!-- Modal para seleccionar espacio -->
+<div *ngIf="isSpaceModalOpen" class="client-modal">
+    <div class="modal-content">
+        <h2>Seleccionar Espacio</h2>
+        <table class="users-table">
+            <thead>
+                <tr>
+                    <th>Numero</th>
+                    <th>Estado</th>
+                    <th>Tipo</th>                    
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let space of spaces "(click)="selectSpace(space)">
+                    <td>{{ space.number }}</td>
+                    <td>{{ space.status }}</td>
+                    <td>{{ space.type }}</td>                                                                               
+                </tr>
+            </tbody>
+        </table>
+        <button (click)="closeSpaceModal()">Cerrar</button>
     </div>
 </div>

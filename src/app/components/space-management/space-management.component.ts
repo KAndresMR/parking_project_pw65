@@ -25,7 +25,7 @@ export class SpaceManagementComponent implements OnInit{
     number: 0,
     status: 'Disponible',
     type: 'Normal',
-    price: 0
+    
   };
 
   // Lista de espacios de parqueo
@@ -55,18 +55,6 @@ export class SpaceManagementComponent implements OnInit{
     this.isEditing = true;
   }
 
-  reserveSpace(space: Space) {
-    this.spaceService.updateSpace(space.id!, { status: 'Ocupado' } as Partial<Space>).then(() => {
-      this.loadSpaces();
-    });
-  }
-
-  freeSpace(space: Space) {
-    this.spaceService.updateSpace(space.id!, { status: 'Disponible' } as Partial<Space>).then(() => {
-      this.loadSpaces();
-    });
-  }
-
   saveSpace() {
     if (this.isEditing) {
       this.message = 'Espacio actualizado exitosamente';
@@ -94,8 +82,7 @@ export class SpaceManagementComponent implements OnInit{
       id: '',      
       number: 0,
       status: 'Disponible',
-      type: 'Normal',
-      price: 0
+      type: 'Normal',      
     };
   }
 
@@ -106,7 +93,7 @@ export class SpaceManagementComponent implements OnInit{
   }
 
   cancelEdit() {
-    this.spaceForm = { number: 0, status: 'Disponible', type: 'Normal', price: 0 };
+    this.spaceForm = { number: 0, status: 'Disponible', type: 'Normal'};
     this.isEditing = false;
   }
 
@@ -115,9 +102,20 @@ export class SpaceManagementComponent implements OnInit{
       id: '', // O si no necesitas `id` aquí, puedes omitirlo
       number: 0,
       status: 'Disponible',
-      type: 'Normal',
-      price: 0
+      type: 'Normal',      
     };
+  }
+
+  reserveSpace(space: Space) {
+    this.spaceService.updateSpace(space.id!, { status: 'Ocupado' } as Partial<Space>).then(() => {
+      this.loadSpaces();
+    });
+  }
+
+  freeSpace(space: Space) {
+    this.spaceService.updateSpace(space.id!, { status: 'Disponible' } as Partial<Space>).then(() => {
+      this.loadSpaces();
+    });
   }
 
 }

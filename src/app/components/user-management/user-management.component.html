@@ -31,7 +31,7 @@
                     <td>{{ user.name }}</td>
                     <td>{{ user.email }}</td>
                     <td>{{ user.role }}</td>
-                    <td>{{ user.uid }}</td>                    
+                    <td>{{ user.state }}</td>                    
                     <td>
                         <button (click)="editUser(user)">Editar</button>
                         <button (click)="deleteUser(user)">Eliminar</button>
@@ -45,11 +45,15 @@
             <h2>{{ isEditing ? 'Editar Usuario' : 'Añadir Nuevo Usuario' }}</h2>
             <form (submit)="saveUser()">
                 <input type="text" [(ngModel)]="userForm.name" name="name" placeholder="Nombre Completo" required />
-                <input type="email" [(ngModel)]="userForm.email" name="email" placeholder="Email" required />
+                <input type="email" [(ngModel)]="userForm.email" name="email" placeholder="Correo Electronico" required />
+                <input type="email" [(ngModel)]="userForm.password" name="password" placeholder="Contraseña" required />
                 <select [(ngModel)]="userForm.role" name="role" required>
-                    <option value="admin">Administrador</option>
-                    <option value="user">Usuario</option>
+                    <option value="administrador">Administrador</option>
+                    <option value="cliente">Cliente</option>
                 </select>
+                <div *ngIf="message" class="success-message">
+                    {{ message }}
+                </div>
                 <button type="submit">{{ isEditing ? 'Actualizar' : 'Guardar' }}</button>
                 <button type="button" (click)="cancelEdit()">Cancelar</button>
             </form>

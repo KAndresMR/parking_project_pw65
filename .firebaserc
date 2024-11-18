@@ -1,6 +1,7 @@
 {
   "projects": {
-    "parking": "parkingppwp65"
+    "parking": "parkingppwp65",
+    "default": "parkingppwp65"
   },
   "targets": {},
   "etags": {}

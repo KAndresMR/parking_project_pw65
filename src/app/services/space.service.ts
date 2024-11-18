@@ -34,5 +34,4 @@ export class SpaceService {
     return deleteDoc(spaceDoc);
   }
 
-
 }

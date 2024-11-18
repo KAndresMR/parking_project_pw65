@@ -4,5 +4,6 @@ export interface Contract {
     clientName: string;
     startDate: string;
     endDate: string;
+    space: number;
     status: string;
 }

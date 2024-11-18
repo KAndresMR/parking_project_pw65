@@ -16,9 +16,17 @@ export class UserManagementComponent implements OnInit{
 
   searchTerm: string = '';
   filterRole: string = '';
+  message: string | null = null;
 
   isEditing = false;
-  userForm = { name: '', email: '', role: 'user' };
+  userForm: User = {
+    id: '',
+    name: '',
+    email: '',
+    password: '',
+    role: 'cliente',
+    state: 'N/D'  
+  };
 
   constructor(private userService: UserService) {}
 
@@ -40,17 +48,43 @@ export class UserManagementComponent implements OnInit{
   }
 
   async deleteUser(user: User) {
-    if (!user.uid) {
+    if (!user.id) {
       console.error("El contrato no tiene un ID válido:", user);
       return; // Sale de la función si el ID no es válido
     }
-    await this.userService.deleteUser(user.uid.toString());
+    await this.userService.deleteUser(user.id.toString());
     this.loadUsers();
   }
 
-  saveUser() {
+  async saveUser() {
+    if (this.isEditing) {
+      this.message = 'Usuario actualizado exitosamente';
+        setTimeout(() => (this.message = null), 3000);
+      await this.userService.updateUser(this.userForm.id.toString(), this.userForm);
+      this.loadUsers();
+      this.resetForm()
+    } else {
+      this.message = 'Usuario registrado exitosamente';
+        setTimeout(() => (this.message = null), 3000);
+      await this.userService.addUsers(this.userForm);
+      this.loadUsers();
+      this.resetForm()
+    }
 
   }
+
+  resetForm() {
+    this.userForm = {
+      id: '',
+      name: '',
+      email: '',
+      password: '',
+      role: 'cliente',
+      state: 'N/D'
+    };
+  }
+  
+
 
   cancelEdit() {
 
