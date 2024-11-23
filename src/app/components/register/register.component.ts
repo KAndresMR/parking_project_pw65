@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { UserService } from '../../services/user.service';
 import { User } from '../../models/user.model';
@@ -8,7 +8,7 @@ import { User } from '../../models/user.model';
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss'
 })
@@ -24,16 +24,22 @@ export class RegisterComponent implements OnInit{
     email: '',
     password: '',
     role: 'cliente',
-    state: 'N/D'  
+    state: 'Inactivo'  
   };
 
   
 
   constructor(
+    private router: Router, 
     private fb: FormBuilder, 
     private userService: UserService) {
       
-    }
+  }
+
+  comeBack() {
+    this.router.navigate(['/login']);
+    console.log("regres")
+  }
 
   ngOnInit(): void {
     this.registerForm = this.fb.group({
@@ -57,10 +63,10 @@ export class RegisterComponent implements OnInit{
         email: this.registerForm.value.email,
         password: this.registerForm.value.password,
         role: 'cliente',
-        state: 'N/D',
+        state: 'Inactivo',
       };
 
-      await this.userService.addUsers(userForm);
+      await this.userService.register(userForm.email, userForm.password, userForm.name);
 
       this.message = 'Usuario registrado exitosamente';
       setTimeout(() => (this.message = null), 3000);
@@ -77,7 +83,7 @@ export class RegisterComponent implements OnInit{
       email: '',
       password: '',
       role: 'cliente',
-      state: 'N/D'
+      state: 'Inactivo'
     };
   }
 

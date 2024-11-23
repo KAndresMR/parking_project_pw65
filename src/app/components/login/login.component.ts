@@ -7,41 +7,48 @@ import { AuthenticationService } from '../../services/authentication.service';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink, RouterOutlet, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, RouterLink],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
 export class LoginComponent {
-  fb = inject(FormBuilder);
-  authService = inject(AuthenticationService);
-  router = inject(Router);
+  fb = inject(FormBuilder);    
   error: string | null = null;
 
-  
+  constructor(private authService: AuthenticationService, private router: Router) {
+
+  }
 
   form = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(6)]],
-  });
+  });  
   
 
-  onLogin() {
+  async onLogin() {
     if (this.form.valid) {
       const email = this.form.value.email as string;
       const password = this.form.value.password as string;
-      console.log('Iniciando sesión con:', email);
-  
-      this.authService.login(email, password).subscribe({
-        next: (role) => {
-          console.log('Rol obtenido:', role);
-        },
-        error: (error) => {
-          this.error = 'Error en el inicio de sesión. Verifica tus credenciales.';
-          console.error(error);
-        }
-      });
+      try{
+        await this.authService.login(email, password);
+      } catch (error) {
+        console.error('Error en el inicio de sesión:', error);
+      }            
     } else {
-      this.error = 'Por favor ingresa un correo y contraseña válidos.';
+      alert('Por favor, completa todos los campos correctamente.');
+    }
+  }
+
+  private getErrorMessage(code: string): string {
+    switch (code) {
+      case 'auth/user-not-found':
+        return 'No se encontró un usuario con ese correo.';
+      case 'auth/wrong-password':
+        return 'La contraseña es incorrecta.';
+      case 'auth/invalid-credential':
+        return 'Error en las credenciales. Revisa tu correo y contraseña.';
+      default:
+        return 'Error inesperado en el inicio de sesión.';
     }
   }
   
@@ -57,7 +64,23 @@ export class LoginComponent {
       }
     });
   }
+
   
+  //Saber si hay un usuario autenticado
+  currentUser() {
+    this.authService.getCurrentUser().subscribe({
+      next: (user) => {
+        if (user) {
+          console.log('Datos del usuario:', user);
+        } else {
+          console.log('No hay usuario autenticado');
+        }
+      },
+      error: (error) => {
+        console.error('Error al obtener los datos del usuario:', error);
+      }
+    });        
+  }
   
 
 }

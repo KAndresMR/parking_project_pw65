@@ -32,9 +32,9 @@
 
         th,
         td {
-            padding: 10px;
-            border: 1px solid #ddd;
+            padding: 12px;
             text-align: left;
+            border-bottom: 1px solid #ddd;
         }
 
         th {
@@ -46,21 +46,16 @@
         }
 
         button {
-            padding: 6px 12px;
-            margin: 0 4px;
+            padding: 8px 12px;
+            margin-right: 5px;
+            background-color: #1E40AF;
+            color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 5px;
             cursor: pointer;
-            font-size: 14px;
 
-            &:first-of-type {
-                background-color: #4CAF50;
-                color: #fff;
-            }
-
-            &:last-of-type {
-                background-color: #f44336;
-                color: #fff;
+            &:hover {
+                background-color: #0d3a8f;
             }
         }
     }

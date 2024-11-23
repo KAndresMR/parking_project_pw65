@@ -4,6 +4,6 @@ export interface User {
     email: string;
     password: string;
     role: 'cliente' | 'administrador';
-    state: 'Contrato' | 'N/D';
+    state: 'Activo' | 'Inactivo';
   }
   

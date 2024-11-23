@@ -8,7 +8,6 @@ import { UserManagementComponent } from './components/user-management/user-manag
 import { WorkScheduleComponent } from './components/work-schedule/work-schedule.component';
 import { RegisterComponent } from './components/register/register.component';
 import { ProfileComponent } from './components/Dashboard_customer/profile/profile.component';
-import { TariffManagementComponent } from './components/tariff-management/tariff-management.component';
 import { NgModule } from '@angular/core';
 
 export const routes: Routes = [
@@ -24,7 +23,6 @@ export const routes: Routes = [
           { path: 'space', component: SpaceManagementComponent },
           { path: 'contract', component: ContractManagementComponent },
           { path: 'user', component: UserManagementComponent },
-          { path: 'tariff', component: TariffManagementComponent },
           { path: 'schedule', component: WorkScheduleComponent },
           { path: '', redirectTo: 'dashboard', pathMatch: 'full' }  // Redirección por defecto al Dashboard
         ]

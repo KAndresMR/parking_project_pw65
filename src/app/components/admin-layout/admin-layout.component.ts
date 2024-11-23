@@ -31,10 +31,7 @@ export class AdminLayoutComponent implements OnInit{
 
   // Método para cerrar sesión y redirigir al login
   logout() {
-    this.authService.logoutt().subscribe(() => {
-      // Una vez que se haya cerrado sesión, redirige al login
-      this.router.navigate(['/login']);
-    });
+    this.router.navigate(['/login']);
   }
 
 }

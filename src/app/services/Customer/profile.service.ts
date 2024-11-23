@@ -10,13 +10,13 @@ export class ProfileService {
 
   constructor(private firestore: Firestore) {}
 
-  getUserProfile(uid: string): Observable<any> {
-    const userDoc = doc(this.firestore, `users/${uid}`);
+  getUserProfile(id: string): Observable<any> {
+    const userDoc = doc(this.firestore, `users/${id}`);
     return from(getDoc(userDoc)).pipe(map(doc => doc.data()));
   }
 
-  updateUserProfile(uid: string, updatedData: any): Promise<void> {
-    const userDoc = doc(this.firestore, `users/${uid}`);
+  updateUserProfile(id: string, updatedData: any): Promise<void> {
+    const userDoc = doc(this.firestore, `users/${id}`);
     return updateDoc(userDoc, updatedData);
   }
 

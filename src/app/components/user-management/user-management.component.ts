@@ -25,7 +25,7 @@ export class UserManagementComponent implements OnInit{
     email: '',
     password: '',
     role: 'cliente',
-    state: 'N/D'  
+    state: 'Inactivo'  
   };
 
   constructor(private userService: UserService) {}
@@ -52,7 +52,7 @@ export class UserManagementComponent implements OnInit{
       console.error("El contrato no tiene un ID válido:", user);
       return; // Sale de la función si el ID no es válido
     }
-    await this.userService.deleteUser(user.id.toString());
+    await this.userService.deleteUser(user);
     this.loadUsers();
   }
 
@@ -66,7 +66,7 @@ export class UserManagementComponent implements OnInit{
     } else {
       this.message = 'Usuario registrado exitosamente';
         setTimeout(() => (this.message = null), 3000);
-      await this.userService.addUsers(this.userForm);
+      await this.userService.register(this.userForm.email, this.userForm.password, this.userForm.name);
       this.loadUsers();
       this.resetForm()
     }
@@ -80,7 +80,7 @@ export class UserManagementComponent implements OnInit{
       email: '',
       password: '',
       role: 'cliente',
-      state: 'N/D'
+      state: 'Inactivo'
     };
   }
   

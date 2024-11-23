@@ -3,6 +3,9 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { ProfileService } from '../../../services/Customer/profile.service';
 import { AuthenticationService } from '../../../services/authentication.service';
 import { CommonModule } from '@angular/common';
+import { Auth } from '@angular/fire/auth';
+import { from } from 'rxjs';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -19,6 +22,8 @@ export class ProfileComponent implements OnInit{
   userProfile: any = { name: '', email: '' }; // Inicializar como un objeto vacío para evitar el error
 
   constructor(
+    private router: Router,
+    private auth: Auth,
     private fb: FormBuilder, 
     private profileService: ProfileService, 
     private authService: AuthenticationService
@@ -31,15 +36,16 @@ export class ProfileComponent implements OnInit{
 
   ngOnInit(): void {
     this.userId = this.authService.getCurrentUserId(); // Obtener el ID del usuario
+    console.log("Id del usuario: "+this.userId)
     if (this.userId) {      
-      const uid = this.userId
-      this.getUserProfile(uid); // Obtener perfil solo si userId está definido
+      const id = this.userId
+      this.getUserProfile(id); // Obtener perfil solo si userId está definido
     }
   }
 
   // Método para obtener el perfil del usuario
-  getUserProfile(uid: string) {
-    this.profileService.getUserProfile(uid).subscribe(
+  getUserProfile(id: string) {
+    this.profileService.getUserProfile(id).subscribe(
         (data) => {
           this.userProfile = data || { name: '', email: '' };
         },
@@ -83,6 +89,11 @@ export class ProfileComponent implements OnInit{
     if (this.userId) {
       this.getUserProfile(this.userId); // Restaura los valores originales del perfil
     }    
+  }
+
+  logout() {
+    this.router.navigate(['/login']);
+    return from(this.auth.signOut());    
   }
 
 }

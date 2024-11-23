@@ -16,9 +16,30 @@ export class WorkScheduleComponent {
   formularioVisible: boolean = false; // Controla la visibilidad del formulario
   editar: boolean = false; // Indica si estamos en modo de edición
   horarioSeleccionado: Schedule = { id: '', day: '', start: '', end: '' }; // Inicializa el horario seleccionado
+  // Lista de días válidos
+  diasValidos: string[] = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo'];
+  ordenAscendenteDia = true;
 
   constructor(private scheduleService: SheduleService) {
     this.cargarHorarios(); // Carga los horarios iniciales
+  }
+
+  toggleOrdenDia() {
+    this.ordenAscendenteDia = !this.ordenAscendenteDia; // Alternar entre ascendente y descendente
+  
+    // Ordenar los horarios por día según el orden establecido
+    const diasOrdenados = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+  
+    this.horarios.sort((a, b) => {
+      const indexA = diasOrdenados.indexOf(a.day);
+      const indexB = diasOrdenados.indexOf(b.day);
+      return this.ordenAscendenteDia ? indexA - indexB : indexB - indexA;
+    });
+  }
+
+  // Validación 5: Verificar que el día ingresado sea válido
+  validarDia(): boolean {
+    return this.diasValidos.includes(this.horarioSeleccionado.day.trim());
   }
 
   cargarHorarios() {
@@ -53,6 +74,9 @@ export class WorkScheduleComponent {
   }
 
   async guardarHorario() {
+    if (!this.validarFormulario()) {
+      return; // Si la validación falla, no continúa
+    }
     if (this.editar) {
       await this.scheduleService.updateHorario(this.horarioSeleccionado); // Llama al servicio para actualizar el horario
     } else {
@@ -74,6 +98,10 @@ export class WorkScheduleComponent {
       alert('Todos los campos son obligatorios.');
       return false;
     }
+    if (!this.validarDia()) {
+      alert('El día ingresado no es válido. Debe ser un día de la semana.');
+      return false;
+    }
     if (!this.validarFormatoHora(this.horarioSeleccionado.start) || !this.validarFormatoHora(this.horarioSeleccionado.end)) {
       alert('Las horas deben estar en formato HH:MM.');
       return false;
@@ -84,6 +112,10 @@ export class WorkScheduleComponent {
     }
     if (!this.validarDuplicados()) {
       alert('Ya existe un horario para el mismo día.');
+      return false;
+    }
+    if (!this.validarConflictos()) {
+      alert('El horario se superpone con otro existente.');
       return false;
     }
     return true; // Si pasa todas las validaciones, retorna true
@@ -119,5 +151,28 @@ export class WorkScheduleComponent {
       horario.id !== this.horarioSeleccionado.id // Ignorar si es el mismo horario en edición
     );
   }
+
+  // Validación 6: Evitar solapamientos de horarios
+  validarConflictos(): boolean {
+    const [newStartHours, newStartMinutes] = this.horarioSeleccionado.start.split(':').map(Number);
+    const [newEndHours, newEndMinutes] = this.horarioSeleccionado.end.split(':').map(Number);
+    const newStartTime = newStartHours * 60 + newStartMinutes;
+    const newEndTime = newEndHours * 60 + newEndMinutes;
+
+    // Recorre los horarios existentes para verificar conflictos
+    return !this.horarios.some(horario => {
+      if (horario.day === this.horarioSeleccionado.day && horario.id !== this.horarioSeleccionado.id) {
+        const [startHours, startMinutes] = horario.start.split(':').map(Number);
+        const [endHours, endMinutes] = horario.end.split(':').map(Number);
+        const startTime = startHours * 60 + startMinutes;
+        const endTime = endHours * 60 + endMinutes;
+
+        // Verifica solapamientos: (A comienza antes que B termine) y (B comienza antes que A termine)
+        return newStartTime < endTime && startTime < newEndTime;
+      }
+      return false;
+    });
+  }
+
 
 }

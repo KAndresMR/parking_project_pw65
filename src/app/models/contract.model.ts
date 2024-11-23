@@ -5,5 +5,6 @@ export interface Contract {
     startDate: string;
     endDate: string;
     space: number;
-    status: string;
+    status: 'Activo' | 'Inactivo';
+    cost: number;  
 }

@@ -12,7 +12,6 @@ import { Router, RouterOutlet } from '@angular/router';
 })
 export class DashboardAdminComponent implements OnInit{
 
-  adminName: string = 'Andres Morocho'
   occupiedSpaces: number = 0
   registeredUsers: number = 0
   activeContracts: number = 0

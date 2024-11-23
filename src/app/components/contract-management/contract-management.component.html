@@ -25,6 +25,7 @@
                     <th>Fecha de Expiración</th>
                     <th>Espacio</th>
                     <th>Estado</th>
+                    <th>Costo Total</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -36,6 +37,7 @@
                     <td>{{ contract.endDate }}</td>
                     <td>{{ contract.space }}</td>
                     <td>{{ contract.status }}</td>
+                    <td>{{ contract.cost | currency:'USD' }}</td>
                     <td>
                         <button (click)="editContract(contract)">Editar</button>
                         <button (click)="deleteContract(contract)">Eliminar</button>
@@ -59,10 +61,7 @@
                         (click)="openClientModal()"
                     />
                 </div>
-                <h3>Fecha en la que Inicia el contrato</h3>
-                <input type="date" [(ngModel)]="contractForm.startDate" placeholder="Fecha de Inicio"  name = "startDate" required />
-                <h3>Fecha en la que Termina el contrato</h3>
-                <input type="date" [(ngModel)]="contractForm.endDate" placeholder="Fecha de Expiración" name = "endDate" required />
+
                 <div>
                     <label>Espacio:</label>
                     <input
@@ -72,7 +71,18 @@
                         readonly
                         (click)="openSpaceModal()"
                     />
-                </div>                
+                </div> 
+
+                <h3>Fecha en la que Inicia el contrato</h3>
+                <input type="date" [(ngModel)]="contractForm.startDate" (change)="calculateCost()" placeholder="Fecha de Inicio"  name = "startDate" required />
+                <h3>Fecha en la que Termina el contrato</h3>
+                <input type="date" [(ngModel)]="contractForm.endDate" (change)="calculateCost()" placeholder="Fecha de Expiración" name = "endDate" required />
+                
+                <div>
+                    <label>Costo Estimado:</label>
+                    <input type="text" [value]="estimatedCost | currency:'USD'" readonly />
+                </div>
+
                 <select [(ngModel)]="contractForm.status" name ="status" required>
                     <option value="Activo">Activo</option>
                     <option value="Inactivo">Inactivo</option>

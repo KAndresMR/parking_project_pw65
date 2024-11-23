@@ -2,10 +2,12 @@
     <header class="schedule-header">
         <h1>Horario de Trabajo</h1>
     </header>    
-    <table>
+    <table class="schedule-table">
         <thead>
             <tr>
-                <th>Día</th>
+                <th (click)="toggleOrdenDia()">Día
+                    <span>{{ ordenAscendenteDia ? '🔼' : '🔽' }}</span>
+                </th>
                 <th>Hora de Inicio</th>
                 <th>Hora de Fin</th>
                 <th>Acciones</th>
@@ -31,8 +33,10 @@
     <form (ngSubmit)="guardarHorario()">
         <label>
             Día:
-            <input type="text" [(ngModel)]="horarioSeleccionado.day" name="dia" required>
-        </label>
+            <select [(ngModel)]="horarioSeleccionado.day" name="dia" required>
+                <option *ngFor="let dia of diasValidos" [value]="dia">{{ dia }}</option>
+            </select>
+        </label>        
         <label>
             Hora de Inicio:
             <input type="time" [(ngModel)]="horarioSeleccionado.start" name="inicio" required>

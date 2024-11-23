@@ -18,7 +18,7 @@ export class SpaceManagementComponent implements OnInit{
   filterStatus: string = '';
   filterType: string = '';
   message: string | null = null;
-
+  ordenAscendente = false; // Variable para controlar el orden
   // Variable para almacenar los datos del espacio en el formulario
   spaceForm: Space = {
     id: '',
@@ -28,6 +28,10 @@ export class SpaceManagementComponent implements OnInit{
     
   };
 
+  toggleOrden() {
+    this.ordenAscendente = !this.ordenAscendente; // Alternar el orden
+    this.spaces.sort((a, b) => this.ordenAscendente ? a.number - b.number : b.number - a.number);
+  }
   // Lista de espacios de parqueo
   spaces: Space[] = [];
   

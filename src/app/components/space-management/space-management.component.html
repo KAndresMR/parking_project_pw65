@@ -22,12 +22,11 @@
                 <option value="vip">VIP</option>
             </select>
         </div>
-
         <!-- Tabla de Espacios -->
         <table class="spaces-table">
             <thead>
                 <tr>
-                    <th>Número de Espacio</th>
+                    <th (click)="toggleOrden()">Número de Espacio <span>{{ ordenAscendente ? '🔼' : '🔽' }}</span></th>
                     <th>Estado</th>
                     <th>Tipo de Espacio</th>                    
                     <th>Acciones</th>
