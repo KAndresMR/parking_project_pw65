@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DashboardService } from '../../services/dashboard.service';
-import { Router, RouterOutlet } from '@angular/router';
-
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard-admin',
@@ -10,27 +9,17 @@ import { Router, RouterOutlet } from '@angular/router';
   templateUrl: './dashboard-admin.component.html',
   styleUrl: './dashboard-admin.component.scss'
 })
-export class DashboardAdminComponent implements OnInit{
-
-  occupiedSpaces: number = 0
-  registeredUsers: number = 0
-  activeContracts: number = 0
-
+export class DashboardAdminComponent implements OnInit {
+  occupiedSpaces: number = 0; // Espacios ocupados
+  registeredUsers: number = 0; // Usuarios registrados
+  activeContracts: number = 0; // Contratos activos
 
   constructor(private router: Router, private dashboardService: DashboardService) {}
 
   ngOnInit() {
-    this.dashboardService.getOccupiedSpaces().subscribe(count => {
-      this.occupiedSpaces = count;
-    });
-
-    this.dashboardService.getRegisteredUsers().subscribe(count => {
-      this.registeredUsers = count;
-    });
-
-    this.dashboardService.getActiveContracts().subscribe(count => {
-      this.activeContracts = count;
-    });
+    this.dashboardService.getOccupiedSpaces().subscribe(count => this.occupiedSpaces = count);
+    this.dashboardService.getRegisteredUsers().subscribe(count => this.registeredUsers = count);
+    this.dashboardService.getActiveContracts().subscribe(count => this.activeContracts = count);
   }
 
   createContract() {
@@ -40,9 +29,8 @@ export class DashboardAdminComponent implements OnInit{
   addSpace() {
     this.router.navigate(['/admin/space']);
   }
-  
+
   manageUsers() {
     this.router.navigate(['/admin/user']);
   }
-
 }

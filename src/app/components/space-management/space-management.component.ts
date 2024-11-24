@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { SpaceService } from '../../services/space.service';
 import { Space } from '../../models/space.model';
 
+
 @Component({
   selector: 'app-space-management',
   standalone: true,
@@ -11,33 +12,41 @@ import { Space } from '../../models/space.model';
   templateUrl: './space-management.component.html',
   styleUrl: './space-management.component.scss'
 })
-export class SpaceManagementComponent implements OnInit{
+export class SpaceManagementComponent implements OnInit {
 
-  isEditing: boolean = false
-  searchNumber: string = '';
-  filterStatus: string = '';
-  filterType: string = '';
-  message: string | null = null;
-  ordenAscendente = false; // Variable para controlar el orden
-  // Variable para almacenar los datos del espacio en el formulario
+  isEditing: boolean = false; // Estado de edición
+  searchNumber: string = ''; // Número de espacio a buscar
+  filterStatus: string = ''; // Filtro por estado del espacio (Disponible, Ocupado, etc.)
+  filterType: string = ''; // Filtro por tipo de espacio
+  message: string | null = null; // Mensaje de éxito al guardar o actualizar
+  ordenAscendente: boolean = false; // Controla si el orden es ascendente o descendente
+
+  // Lista de espacios de parqueo
+  spaces: Space[] = [];
+
+  // Objeto para almacenar los datos del espacio en el formulario
   spaceForm: Space = {
     id: '',
     number: 0,
     status: 'Disponible',
     type: 'Normal',
-    
   };
 
+  constructor(private spaceService: SpaceService) {}
+
+  /**
+   * Alterna el orden de los espacios de parqueo.
+   * Ordena los espacios por número, ascendente o descendente.
+   */
   toggleOrden() {
     this.ordenAscendente = !this.ordenAscendente; // Alternar el orden
     this.spaces.sort((a, b) => this.ordenAscendente ? a.number - b.number : b.number - a.number);
   }
-  // Lista de espacios de parqueo
-  spaces: Space[] = [];
-  
-  constructor(private spaceService: SpaceService) {}
 
-  // Método para obtener los espacios filtrados
+  /**
+   * Filtra los espacios según los criterios especificados (número, estado, tipo).
+   * @returns Lista de espacios filtrados.
+   */
   getFilteredSpaces(): Space[] {
     return this.spaces.filter(space => {
       // Filtro por número de espacio
@@ -50,19 +59,31 @@ export class SpaceManagementComponent implements OnInit{
     });
   }
 
+  /**
+   * Método llamado cuando el componente es inicializado.
+   * Carga los espacios de parqueo.
+   */
   ngOnInit() {
     this.loadSpaces();
-  }    
+  }
 
+  /**
+   * Activa el modo de edición para un espacio específico.
+   * @param space El espacio a editar.
+   */
   editSpace(space: Space) {
     this.spaceForm = { ...space };
     this.isEditing = true;
   }
 
+  /**
+   * Guarda los cambios en el espacio.
+   * Si es edición, actualiza el espacio, si es creación, agrega un nuevo espacio.
+   */
   saveSpace() {
     if (this.isEditing) {
       this.message = 'Espacio actualizado exitosamente';
-        setTimeout(() => (this.message = null), 3000);
+      setTimeout(() => (this.message = null), 3000); // Elimina el mensaje después de 3 segundos
       // Actualizar espacio existente
       this.spaceService.updateSpace(this.spaceForm.id!, this.spaceForm).then(() => {
         this.isEditing = false;
@@ -71,7 +92,7 @@ export class SpaceManagementComponent implements OnInit{
       });
     } else {
       this.message = 'Espacio registrado exitosamente';
-        setTimeout(() => (this.message = null), 3000);
+      setTimeout(() => (this.message = null), 3000); // Elimina el mensaje después de 3 segundos
       // Crear nuevo espacio      
       this.spaceService.addSpace(this.spaceForm).then(() => {
         this.resetForm();
@@ -80,42 +101,49 @@ export class SpaceManagementComponent implements OnInit{
     }
   }
 
-  // Método para restablecer el formulario después de guardar
+  /**
+   * Método para restablecer el formulario después de guardar.
+   */
   resetForm() {
     this.spaceForm = {
-      id: '',      
+      id: '',
       number: 0,
       status: 'Disponible',
-      type: 'Normal',      
+      type: 'Normal',
     };
   }
 
+  /**
+   * Carga los espacios de parqueo desde el servicio.
+   */
   loadSpaces() {
     this.spaceService.getSpaces().then(spaces => {
       this.spaces = spaces;
     });
   }
 
+  /**
+   * Cancela la edición y restablece el formulario.
+   */
   cancelEdit() {
-    this.spaceForm = { number: 0, status: 'Disponible', type: 'Normal'};
+    this.spaceForm = { number: 0, status: 'Disponible', type: 'Normal' };
     this.isEditing = false;
   }
 
-  private resetSpaceForm() {
-    this.spaceForm = {
-      id: '', // O si no necesitas `id` aquí, puedes omitirlo
-      number: 0,
-      status: 'Disponible',
-      type: 'Normal',      
-    };
-  }
-
+  /**
+   * Reserva un espacio de parqueo, cambiando su estado a "Ocupado".
+   * @param space El espacio a reservar.
+   */
   reserveSpace(space: Space) {
     this.spaceService.updateSpace(space.id!, { status: 'Ocupado' } as Partial<Space>).then(() => {
       this.loadSpaces();
     });
   }
 
+  /**
+   * Libera un espacio de parqueo, cambiando su estado a "Disponible".
+   * @param space El espacio a liberar.
+   */
   freeSpace(space: Space) {
     this.spaceService.updateSpace(space.id!, { status: 'Disponible' } as Partial<Space>).then(() => {
       this.loadSpaces();

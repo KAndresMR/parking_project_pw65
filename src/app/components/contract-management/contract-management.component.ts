@@ -15,8 +15,8 @@ import { Space } from '../../models/space.model';
   templateUrl: './contract-management.component.html',
   styleUrl: './contract-management.component.scss'
 })
-export class ContractManagementComponent implements OnInit{
-  
+export class ContractManagementComponent implements OnInit {
+  // Tarifas por tipo de espacio
   tarifasPorTipo: { [key: string]: number } = {
     VIP: 50,
     Discapacitados: 40,
@@ -25,22 +25,34 @@ export class ContractManagementComponent implements OnInit{
     Normal: 15,
   };
 
-  contracts: Contract[] = []
-  clients: User[] = []
-  spaces: Space[] = []
-  message: string | null = null
-  isClientModalOpen: boolean = false
-  isSpaceModalOpen: boolean = false
-  isEditing = false
-  searchText: string = ''
-  filterStatus: string = ''
-  selectedClientName: string = ''
-  selectedSpaceNum: number = 0
-  idSpace: string =''
-  idUser: string =''
-  estimatedCost: number = 0; // Nuevo: Para almacenar el costo calculado
-  var1: string = ''
+  // Lista de contratos cargados
+  contracts: Contract[] = [];
+  // Lista de usuarios (clientes)
+  clients: User[] = [];
+  // Lista de espacios disponibles
+  spaces: Space[] = [];
+  // Mensaje para notificar al usuario sobre operaciones realizadas
+  message: string | null = null;
+  // Estados de los modales para seleccionar clientes y espacios
+  isClientModalOpen: boolean = false;
+  isSpaceModalOpen: boolean = false;
+  // Bandera para determinar si se está editando un contrato
+  isEditing = false;
+  // Parámetros para búsqueda y filtrado
+  searchText: string = '';
+  filterStatus: string = '';
+  // Datos seleccionados en los modales
+  selectedClientName: string = '';
+  selectedSpaceNum: number = 0;
+  // IDs de cliente y espacio seleccionados
+  idSpace: string = '';
+  idUser: string = '';
+  // Costo estimado del contrato
+  estimatedCost: number = 0;
+  // Variable auxiliar para almacenar el tipo de espacio
+  var1: string = '';
 
+  // Modelo del formulario de contrato
   contractForm: Contract = {
     id: '',
     clientName: '',
@@ -49,64 +61,63 @@ export class ContractManagementComponent implements OnInit{
     space: 0,
     status: 'Activo',
     cost: 0
-  };  
+  };
 
-  constructor(private contractService: ContractService, private userService: UserService, private spaceService: SpaceService) {}
+  constructor(
+    private contractService: ContractService,
+    private userService: UserService,
+    private spaceService: SpaceService
+  ) {}
 
   ngOnInit() {
+    // Cargar los contratos al inicializar el componente
     this.loadContracts();
   }
 
+  // Guardar o actualizar un contrato
   async saveContract() {
-    this.calculateCost()
+    this.calculateCost();
     this.contractForm.cost = this.estimatedCost;
-    const newContract: Contract = {
-      ...this.contractForm,
-      cost: this.estimatedCost, // Asignar el costo calculado
-    };
-
 
     if (this.isEditing) {
+      // Actualizar contrato existente
       await this.contractService.updateContract(this.contractForm.id.toString(), this.contractForm);
       this.message = 'Contrato actualizado exitosamente';
-        setTimeout(() => (this.message = null), 3000);
     } else {
-      if (this.selectedClientName !== '' || this.selectedSpaceNum !== 0) {
-        console.log("Id el user: "+this.idUser)
-        console.log("Id el space: "+this.idSpace)
-
-        await this.contractService.addContract(this.contractForm, this.idUser, this.idSpace);      
+      // Registrar un nuevo contrato
+      if (this.selectedClientName && this.selectedSpaceNum) {
+        await this.contractService.addContract(this.contractForm, this.idUser, this.idSpace);
         this.message = 'Contrato registrado exitosamente';
-        setTimeout(() => (this.message = null), 3000);
       } else {
         this.message = 'Por favor complete todos los campos necesarios!';
-        setTimeout(() => (this.message = null), 3000);
-      }      
+      }
     }
+    setTimeout(() => (this.message = null), 3000);
     this.resetForm();
     this.loadContracts();
   }
 
+  // Activar modo edición para un contrato
   editContract(contract: Contract) {
-    this.contractForm = { ...contract }; // Copiar los datos del contrato seleccionado
-    this.isEditing = true; // Activar el modo edición
+    this.contractForm = { ...contract };
+    this.isEditing = true;
   }
 
+  // Eliminar un contrato
   async deleteContract(contract: Contract) {
-    if (!contract.id) {
-      console.error("El contrato no tiene un ID válido:", contract);
-      return; // Sale de la función si el ID no es válido
-    }    
+    if (!contract.id) return;
+
     try {
       await this.contractService.deleteContract(contract);
-    alert('Contrato eliminado correctamente');
-    this.loadContracts(); // Recargar los contratos      
+      alert('Contrato eliminado correctamente');
+      this.loadContracts();
     } catch (error) {
       console.error('Error al eliminar el contrato:', error);
       alert('Hubo un problema al intentar eliminar el contrato.');
-    }            
-  }  
+    }
+  }
 
+  // Restablecer el formulario de contrato
   resetForm() {
     this.contractForm = {
       id: '',
@@ -117,145 +128,109 @@ export class ContractManagementComponent implements OnInit{
       status: 'Activo',
       cost: 0
     };
+    this.isEditing = false;
   }
 
+  // Cargar todos los contratos desde el servicio
   loadContracts() {
     this.contractService.getSpaces().then(contracts => {
       this.contracts = contracts;
     });
   }
 
+  // Cancelar edición de contrato
   cancelEdit() {
     this.resetForm();
-    this.isEditing = false;
   }
 
-  //Filtrado y busqueda de contratos
+  // Obtener contratos filtrados por búsqueda y estado
   get filteredContracts(): Contract[] {
     return this.contracts.filter(contract => {
-      // Búsqueda por nombre o ID
-      const matchesSearchText = this.searchText 
-        ? contract.clientName.toLowerCase().includes(this.searchText.toLowerCase()) || 
-          contract.id.toString().includes(this.searchText) 
-        : true;      
-      // Filtro por estado
-      const matchesStatus = this.filterStatus 
-        ? contract.status.toLowerCase() === this.filterStatus.toLowerCase() 
-        : true;      
-      // Retorna verdadero solo si ambos filtros coinciden
+      const matchesSearchText = this.searchText
+        ? contract.clientName.toLowerCase().includes(this.searchText.toLowerCase()) ||
+          contract.id.toString().includes(this.searchText)
+        : true;
+
+      const matchesStatus = this.filterStatus
+        ? contract.status.toLowerCase() === this.filterStatus.toLowerCase()
+        : true;
+
       return matchesSearchText && matchesStatus;
     });
   }
 
-  //Metodos para seleccionar el usuario
+  // Abrir el modal para seleccionar un cliente
   openClientModal() {
     this.isClientModalOpen = true;
     this.userService.getUsers().then(users => {
-      this.clients = users
-    })
+      this.clients = users;
+    });
   }
 
+  // Cerrar el modal de cliente
   closeClientModal() {
     this.isClientModalOpen = false;
   }
 
+  // Seleccionar un cliente del modal
   selectClient(user: User) {
     this.selectedClientName = user.name;
-    if(user.id !== undefined ) {
-      this.idUser = user.id
-    } else {
-      console.error('El ID del usuario es undefined');
-    } 
-    this.contractForm.clientName = user.name;    
-    this.closeClientModal();  // Cerrar el modal
+    this.idUser = user.id || '';
+    this.contractForm.clientName = user.name;
+    this.closeClientModal();
   }
 
-
-
-
-  //Metodos para seleccionar el espacio
-  openSpaceModal() {    
-    this.isSpaceModalOpen = true;    
-    this.spaceService.getSpaces().then(spaces => {   
-        
-      this.spaces = spaces      
-    })
+  // Abrir el modal para seleccionar un espacio
+  openSpaceModal() {
+    this.isSpaceModalOpen = true;
+    this.spaceService.getSpaces().then(spaces => {
+      this.spaces = spaces;
+    });
   }
 
+  // Cerrar el modal de espacio
   closeSpaceModal() {
     this.isSpaceModalOpen = false;
   }
 
+  // Seleccionar un espacio del modal
   selectSpace(space: Space) {
-    this.selectedSpaceNum = space.number
-    if(space.id !== undefined ) {
-      this.idSpace = space.id
-    } else {
-      console.error('El ID del espacio es undefined');
-    }
+    this.selectedSpaceNum = space.number;
+    this.idSpace = space.id || '';
+    this.var1 = space.type;
+    this.contractForm.space = space.number;
     this.calculateCost();
-    this.var1 = space.type    
-    this.contractForm.space = space.number
-    this.closeSpaceModal()
+    this.closeSpaceModal();
   }
 
-
-  
-  //Funcion para calcular dias
+  // Calcular la cantidad de días entre dos fechas
   calculateDays(startDate: string, endDate: string): number {
     const start = new Date(startDate);
     const end = new Date(endDate);
-  
     if (end < start) {
       alert('La fecha de fin debe ser posterior a la fecha de inicio');
-      return 0; // Evitar cálculos erróneos
+      return 0;
     }
-  
     const millisecondsPerDay = 1000 * 60 * 60 * 24;
-    const days = Math.ceil((end.getTime() - start.getTime()) / millisecondsPerDay);
-  
-    return days;
+    return Math.ceil((end.getTime() - start.getTime()) / millisecondsPerDay);
   }
 
-  
-
-  //Funcion para calcular el costo total
+  // Calcular el costo total del contrato
   calculateCost() {
-    
-    // Obtén el tipo de espacio seleccionado
     const spaceType = this.spaces.find(space => space.number === this.selectedSpaceNum)?.type;
-
     if (!spaceType) {
       console.error('No se pudo determinar el tipo de espacio.');
       this.estimatedCost = 0;
       return;
     }
 
-    // Obtén la tarifa diaria según el tipo de espacio
     const tarifaDiaria = this.tarifasPorTipo[spaceType] || 0;
+    const days = this.calculateDays(this.contractForm.startDate, this.contractForm.endDate);
 
-    // Calcula el número de días entre las fechas seleccionadas
-    const startDate = new Date(this.contractForm.startDate);
-    const endDate = new Date(this.contractForm.endDate);
-
-    if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
-      console.error('Fechas inválidas.');
+    if (days > 0) {
+      this.estimatedCost = tarifaDiaria * days;
+    } else {
       this.estimatedCost = 0;
-      return;
     }
-
-    const diferenciaDias = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
-
-    if (diferenciaDias <= 0) {
-      console.error('La fecha de finalización debe ser posterior a la fecha de inicio.');
-      this.estimatedCost = 0;
-      return;
-    }
-
-    // Calcula el costo total
-    this.estimatedCost = tarifaDiaria * diferenciaDias;
-    console.log(`Tipo de espacio: ${spaceType}, Tarifa diaria: ${tarifaDiaria}, Días: ${diferenciaDias}, Costo total: ${this.estimatedCost}`);
-
   }
-  
 }

@@ -1,19 +1,27 @@
 <div class="admin-layout">
-    <nav class="admin-sidebar">
-      <ul>        
-        <li (click)="goTo('space')">Gestión de Espacios</li>
-        <li (click)="goTo('contract')">Gestión de Contratos</li>
-        <li (click)="goTo('user')">Gestión de Usuarios</li>
-        <li (click)="goTo('schedule')">Horario de Trabajo</li>
-      </ul>
-      <div class="contact-info">
-        <p>{{ userName }}</p>
-        <p>{{ userEmail }}</p>
-      </div>
-      <button class="logout-button" (click)="logout()">Salir</button>
-    </nav>    
-    <div class="admin-content">
-      <router-outlet></router-outlet> <!-- Aquí se carga el contenido de cada vista -->
+  <!-- Barra lateral de navegación -->
+  <nav class="admin-sidebar">
+    <ul>
+      <!-- Navegación a las diferentes secciones del administrador -->
+      <li (click)="goTo('space')">Gestión de Espacios</li>
+      <li (click)="goTo('contract')">Gestión de Contratos</li>
+      <li (click)="goTo('user')">Gestión de Usuarios</li>
+      <li (click)="goTo('schedule')">Horario de Trabajo</li>
+    </ul>
+    
+    <!-- Información del usuario autenticado -->
+    <div class="contact-info">
+      <p>{{ userName }}</p> <!-- Nombre del usuario logueado -->
+      <p>{{ userEmail }}</p> <!-- Correo del usuario logueado -->
     </div>
-  </div>
+
+    <!-- Botón para cerrar sesión -->
+    <button class="logout-button" (click)="logout()">Salir</button>
+  </nav>
   
+  <!-- Contenedor principal para cargar vistas dinámicas -->
+  <div class="admin-content">
+    <router-outlet></router-outlet>
+    <!-- Aquí se renderizan las vistas correspondientes según la ruta seleccionada -->
+  </div>
+</div>

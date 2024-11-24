@@ -1,37 +1,18 @@
-// Variables para facilitar la gestión de colores y márgenes
+// Variables básicas para diseño
 $primary-color: #3498db;
 $secondary-color: #2ecc71;
 $danger-color: #e74c3c;
-$light-bg-color: #f9f9f9;
-$card-bg-color: #ffffff;
-$border-radius: 8px;
-$shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-$transition-time: 0.3s;
+$text-color: #333;
+$background-color: #f9f9f9;
+$border-radius: 6px;
 
-// Contenedor principal del perfil
+// Contenedor principal
 .profile-container {
-  padding: 30px;
-  max-width: 1200px;
+  padding: 20px;
+  max-width: 800px;
   margin: 0 auto;
-  background-color: $light-bg-color;
-  border-radius: $border-radius;
-  box-shadow: $shadow;
-  overflow: hidden;
+  background-color: $background-color;
 
-  .close-btn {
-    font-size: 1.2em;
-    color: $danger-color;
-    border: none;
-    background: none;
-    cursor: pointer;
-    transition: color $transition-time;
-
-    &:hover {
-      color: darken($danger-color, 10%);
-    }
-  }
-
-  // Encabezado del perfil
   .profile-header {
     display: flex;
     align-items: center;
@@ -39,285 +20,109 @@ $transition-time: 0.3s;
     margin-bottom: 20px;
 
     .profile-image {
-      width: 80px;
-      height: 80px;
+      width: 60px;
+      height: 60px;
       border-radius: 50%;
       overflow: hidden;
-      margin-right: 20px;
 
       img {
         width: 100%;
         height: 100%;
         object-fit: cover;
-        border-radius: 50%;
       }
     }
 
     h2 {
-      font-size: 2em;
-      font-weight: bold;
-      color: #333;
+      font-size: 1.8em;
+      color: $text-color;
       margin: 0;
     }
 
     .edit-btn {
-      padding: 10px 20px;
-      background-color: $primary-color;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background-color $transition-time;
-
-      &:hover {
-        background-color: darken($primary-color, 10%);
-      }
-    }
-  }
-
-  // Información personal
-  .profile-info {
-    background-color: $card-bg-color;
-    padding: 20px;
-    border-radius: $border-radius;
-    box-shadow: $shadow;
-    margin-bottom: 30px;
-
-    h3 {
-      font-size: 1.5em;
-      color: $primary-color;
-      margin-bottom: 20px;
-    }
-
-    .info-group {
-      margin-bottom: 15px;
-
-      label {
-        font-size: 1.1em;
-        color: #555;
-      }
-
-      span {
-        font-size: 1.2em;
-        color: #333;
-        font-weight: bold;
-      }
-    }
-  }
-
-  // Formulario de edición del perfil
-  .profile-edit-form {
-    background-color: $card-bg-color;
-    padding: 20px;
-    border-radius: $border-radius;
-    box-shadow: $shadow;
-    
-    h3 {
-      font-size: 1.6em;
-      color: $primary-color;
-      margin-bottom: 20px;
-    }
-
-    .form-group {
-      margin-bottom: 20px;
-
-      label {
-        font-size: 1.1em;
-        color: #555;
-      }
-
-      input {
-        width: 100%;
-        padding: 10px;
-        border-radius: $border-radius;
-        border: 1px solid #ddd;
-        font-size: 1em;
-        color: #333;
-        transition: border-color $transition-time;
-
-        &:focus {
-          border-color: $primary-color;
-        }
-      }
-    }
-
-    button {
-      width: 100%;
-      padding: 12px;
+      padding: 8px 12px;
       background-color: $primary-color;
       color: white;
       border: none;
       border-radius: $border-radius;
       cursor: pointer;
-      font-size: 1.1em;
-      transition: background-color $transition-time;
 
       &:hover {
         background-color: darken($primary-color, 10%);
       }
-
-      &.cancel-btn {
-        background-color: $danger-color;
-
-        &:hover {
-          background-color: darken($danger-color, 10%);
-        }
-      }
     }
   }
 
-  // Contenedor de espacios
-  .spaces-container {
-    margin-bottom: 30px;
+  .spaces-container, .contracts-container {
+    margin-top: 20px;
 
     h2 {
-      font-size: 2em;
-      color: #333;
-      margin-bottom: 20px;
-    }
-
-    .filters {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 20px;
-
-      label {
-        font-size: 1.1em;
-        color: #555;
-      }
-
-      select {
-        padding: 10px;
-        border-radius: 5px;
-        border: 1px solid #ccc;
-        font-size: 1em;
-        color: #555;
-        background-color: #fff;
-      }
-
-      button {
-        padding: 10px 20px;
-        background-color: $primary-color;
-        color: #fff;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 1.1em;
-        transition: background-color $transition-time;
-
-        &:hover {
-          background-color: darken($primary-color, 10%);
-        }
-      }
-    }
-
-    .space {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background-color: $card-bg-color;
-      padding: 20px;
+      font-size: 1.5em;
+      color: $text-color;
       margin-bottom: 15px;
+    }
+
+    .item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 15px;
+      background-color: white;
+      border: 1px solid #ddd;
       border-radius: $border-radius;
-      box-shadow: $shadow;
-      transition: box-shadow $transition-time;
+      margin-bottom: 10px;
 
-      &:hover {
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-      }
-
-      .space-info {
-        flex-grow: 1;
+      .item-info {
+        flex: 1;
 
         h3 {
-          font-size: 1.3em;
-          color: #333;
+          font-size: 1.2em;
+          margin: 0;
+          color: $text-color;
         }
 
         p {
-          color: #555;
+          margin: 5px 0 0;
+          font-size: 0.9em;
+          color: lighten($text-color, 20%);
         }
       }
 
-      .reserve-btn {
-        padding: 12px 20px;
-        background-color: $secondary-color;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 1.1em;
-        transition: background-color $transition-time;
+      .action-btns {
+        display: flex;
+        gap: 10px;
 
-        &:hover {
-          background-color: darken($secondary-color, 10%);
+        button {
+          padding: 8px 12px;
+          font-size: 0.9em;
+          border: none;
+          border-radius: $border-radius;
+          cursor: pointer;
+
+          &.reserve-btn {
+            background-color: $secondary-color;
+            color: white;
+
+            &:hover {
+              background-color: darken($secondary-color, 10%);
+            }
+          }
+
+          &.cancel-btn {
+            background-color: $danger-color;
+            color: white;
+
+            &:hover {
+              background-color: darken($danger-color, 10%);
+            }
+          }
         }
       }
     }
 
-    .no-spaces {
+    .no-items {
       text-align: center;
-      color: #999;
-      font-size: 1.2em;
-    }
-  }
-
-  // Contenedor de contratos
-  .contracts-container {
-    h2 {
-      font-size: 2em;
-      color: #333;
-      margin-bottom: 20px;
-    }
-
-    .contract {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background-color: $card-bg-color;
-      padding: 20px;
-      margin-bottom: 15px;
-      border-radius: $border-radius;
-      box-shadow: $shadow;
-      transition: box-shadow $transition-time;
-
-      &:hover {
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-      }
-
-      .contract-info {
-        flex-grow: 1;
-
-        h3 {
-          font-size: 1.3em;
-          color: #333;
-        }
-
-        p {
-          color: #555;
-        }
-      }
-
-      .cancel-btn {
-        padding: 12px 20px;
-        background-color: $danger-color;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 1.1em;
-        transition: background-color $transition-time;
-
-        &:hover {
-          background-color: darken($danger-color, 10%);
-        }
-      }
-    }
-
-    .no-contracts {
-      text-align: center;
-      color: #999;
-      font-size: 1.2em;
+      color: lighten($text-color, 40%);
+      font-size: 1em;
     }
   }
 }

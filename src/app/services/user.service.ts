@@ -1,6 +1,5 @@
 import { inject, Injectable } from '@angular/core';
 import { Firestore } from '@angular/fire/firestore';
-
 import { addDoc, collection, deleteDoc, doc, getDocs, query, setDoc, updateDoc, where, writeBatch } from 'firebase/firestore';
 import { User } from '../models/user.model';
 import { Router } from '@angular/router';
@@ -12,8 +11,11 @@ import { Auth, user } from '@angular/fire/auth';
 })
 export class UserService {
 
+  // Inyecta la instancia de Firebase Auth
   firebaseAuth = inject(Auth)
+  // Observa el estado del usuario autenticado
   user$ = user(this.firebaseAuth)
+  // Variable para manejar el estado del espacio
   stateSpace: string = ''
 
   constructor(
@@ -22,6 +24,15 @@ export class UserService {
     private auth: Auth) 
     { }
 
+  /**
+   * Registra un nuevo usuario en Firebase Authentication y guarda su información en Firestore.
+   * @param email Correo electrónico del usuario.
+   * @param password Contraseña del usuario.
+   * @param name Nombre del usuario.
+   * @param role Rol del usuario (por defecto es 'cliente').
+   * @param state Estado del usuario (por defecto es 'Inactivo').
+   * @returns Promise que resuelve cuando el registro se completa.
+   */
   async register(email: string, password: string, name: string, role: string = 'cliente', state: string = 'Inactivo'): Promise<void> {
     try {
       // Crear usuario en Firebase Authentication
@@ -51,19 +62,33 @@ export class UserService {
       }
     }
   }
-  
 
+  /**
+   * Obtiene todos los usuarios almacenados en Firestore.
+   * @returns Promise que resuelve con un arreglo de usuarios.
+   */
   async getUsers() {
     const spacesCollection = collection(this.firestore, 'users');
     const snapshot = await getDocs(spacesCollection);
     return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as User[];
   }
 
+  /**
+   * Actualiza la información de un usuario específico.
+   * @param id Identificador del usuario a actualizar.
+   * @param user Objeto con los datos a actualizar del usuario.
+   * @returns Promise que resuelve cuando la actualización se completa.
+   */
   async updateUser(id: string, user: Partial<User>) {
     const userDoc = doc(this.firestore, `users/${id}`);
     return updateDoc(userDoc, user);
   }
 
+  /**
+   * Elimina un usuario y actualiza las entidades relacionadas (contratos y espacios).
+   * @param user Usuario que se desea eliminar.
+   * @returns Promise que resuelve cuando la eliminación y actualización de datos se completan.
+   */
   async deleteUser(user: User): Promise <void> {    
     const batch = writeBatch(this.firestore)
     try {
@@ -111,6 +136,4 @@ export class UserService {
       throw error;
     }
   }
-
-
 }
