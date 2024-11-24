@@ -6,6 +6,10 @@ import { CommonModule } from '@angular/common';
 import { Auth } from '@angular/fire/auth';
 import { from } from 'rxjs';
 import { Router } from '@angular/router';
+import { Space } from '../../../models/space.model';
+import { Contract } from '../../../models/contract.model';
+import { SpaceService } from '../../../services/space.service';
+import { ContractService } from '../../../services/contract.service';
 
 
 @Component({
@@ -16,16 +20,23 @@ import { Router } from '@angular/router';
   styleUrl: './profile.component.scss'
 })
 export class ProfileComponent implements OnInit{
+  
   profileForm: FormGroup;
   userId: string | null = null;
   isEditing: boolean = false;
   userProfile: any = { name: '', email: '' }; // Inicializar como un objeto vacío para evitar el error
+  availableSpaces: any[] = [];
+  contracts: any[] = [];
+  selectedSpaceType: string = 'all';
+  spaces: Space[] = [];
+  
 
   constructor(
     private router: Router,
     private auth: Auth,
     private fb: FormBuilder, 
     private profileService: ProfileService, 
+    private spaceService: SpaceService, 
     private authService: AuthenticationService
   ) {
     this.profileForm = this.fb.group({
@@ -41,6 +52,30 @@ export class ProfileComponent implements OnInit{
       const id = this.userId
       this.getUserProfile(id); // Obtener perfil solo si userId está definido
     }
+    this.loadSpaces();
+    //this.loadContracts();
+  }
+
+  async loadSpaces() {
+    try {
+      this.spaces = await this.spaceService.getAvailableSpaces();
+    } catch (error) {
+      console.error('Error loading spaces:', error);
+    }
+  }
+
+  async reserveSpace(space: any): Promise<void> {
+    try {
+      await this.spaceService.reserveSpace(space.id);
+      alert('Espacio reservado exitosamente');
+      this.loadSpaces(); // Recargar los espacios para reflejar la reserva
+    } catch (error) {
+      alert('Error al reservar el espacio');
+    }
+  }
+
+  cancelContract(contract: Contract) {
+
   }
 
   // Método para obtener el perfil del usuario

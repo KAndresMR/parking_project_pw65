@@ -1,163 +1,323 @@
+// Variables para facilitar la gestión de colores y márgenes
+$primary-color: #3498db;
+$secondary-color: #2ecc71;
+$danger-color: #e74c3c;
+$light-bg-color: #f9f9f9;
+$card-bg-color: #ffffff;
+$border-radius: 8px;
+$shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+$transition-time: 0.3s;
+
+// Contenedor principal del perfil
 .profile-container {
-    max-width: 500px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    font-family: Arial, sans-serif;
+  padding: 30px;
+  max-width: 1200px;
+  margin: 0 auto;
+  background-color: $light-bg-color;
+  border-radius: $border-radius;
+  box-shadow: $shadow;
+  overflow: hidden;
 
-    .profile-header {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        margin-bottom: 20px;
-
-        .profile-image {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            overflow: hidden;
-            margin-bottom: 10px;
-
-            img {
-                width: 100%;
-                height: auto;
-            }
-        }
-
-        h2 {
-            font-size: 1.6em;
-            margin: 10px 0;
-            color: #333;
-        }
-
-        .edit-btn {
-            margin-top: 10px;
-            padding: 8px 15px;
-            background-color: #4caf50;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-
-            &:hover {
-                background-color: #45a049;
-            }
-        }
-    }
-
-    .profile-info {
-        background-color: #fff;
-        padding: 15px;
-        border-radius: 10px;
-        margin-bottom: 20px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-
-        h3 {
-            color: #333;
-            margin-bottom: 15px;
-            font-size: 1.2em;
-        }
-
-        .info-group {
-            display: flex;
-            justify-content: space-between;
-            margin: 10px 0;
-            font-size: 0.9em;
-
-            label {
-                font-weight: bold;
-                color: #555;
-            }
-
-            span {
-                color: #777;
-            }
-        }
-    }
-
-    .profile-edit-form {
-        background-color: #fff;
-        padding: 15px;
-        border-radius: 10px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-
-        h3 {
-            color: #333;
-            margin-bottom: 15px;
-            font-size: 1.2em;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            margin-bottom: 15px;
-            text-align: left;
-
-            label {
-                font-size: 0.9em;
-                color: #555;
-            }
-
-            input {
-                padding: 8px;
-                font-size: 1em;
-                border: 1px solid #ddd;
-                border-radius: 5px;
-                transition: border-color 0.3s;
-
-                &:focus {
-                    border-color: #4caf50;
-                    outline: none;
-                }
-            }
-        }
-
-        .save-btn {
-            padding: 10px 20px;
-            background-color: #4caf50;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-
-            &:hover {
-                background-color: #45a049;
-            }
-        }
-
-        .cancel-btn {
-            padding: 10px 20px;
-            background-color: #d9534f;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            margin-top: 10px;
-
-            &:hover {
-                background-color: #c9302c;
-            }
-        }
-    }
-}
-
-.close-btn {
-    margin-top: 10px;
-    padding: 8px 15px;
-    background-color: #d9534f;
-    color: #fff;
+  .close-btn {
+    font-size: 1.2em;
+    color: $danger-color;
     border: none;
-    border-radius: 5px;
+    background: none;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: color $transition-time;
 
     &:hover {
-        background-color: #45a049;
+      color: darken($danger-color, 10%);
     }
+  }
+
+  // Encabezado del perfil
+  .profile-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+
+    .profile-image {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      overflow: hidden;
+      margin-right: 20px;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 50%;
+      }
+    }
+
+    h2 {
+      font-size: 2em;
+      font-weight: bold;
+      color: #333;
+      margin: 0;
+    }
+
+    .edit-btn {
+      padding: 10px 20px;
+      background-color: $primary-color;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color $transition-time;
+
+      &:hover {
+        background-color: darken($primary-color, 10%);
+      }
+    }
+  }
+
+  // Información personal
+  .profile-info {
+    background-color: $card-bg-color;
+    padding: 20px;
+    border-radius: $border-radius;
+    box-shadow: $shadow;
+    margin-bottom: 30px;
+
+    h3 {
+      font-size: 1.5em;
+      color: $primary-color;
+      margin-bottom: 20px;
+    }
+
+    .info-group {
+      margin-bottom: 15px;
+
+      label {
+        font-size: 1.1em;
+        color: #555;
+      }
+
+      span {
+        font-size: 1.2em;
+        color: #333;
+        font-weight: bold;
+      }
+    }
+  }
+
+  // Formulario de edición del perfil
+  .profile-edit-form {
+    background-color: $card-bg-color;
+    padding: 20px;
+    border-radius: $border-radius;
+    box-shadow: $shadow;
+    
+    h3 {
+      font-size: 1.6em;
+      color: $primary-color;
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+
+      label {
+        font-size: 1.1em;
+        color: #555;
+      }
+
+      input {
+        width: 100%;
+        padding: 10px;
+        border-radius: $border-radius;
+        border: 1px solid #ddd;
+        font-size: 1em;
+        color: #333;
+        transition: border-color $transition-time;
+
+        &:focus {
+          border-color: $primary-color;
+        }
+      }
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: $primary-color;
+      color: white;
+      border: none;
+      border-radius: $border-radius;
+      cursor: pointer;
+      font-size: 1.1em;
+      transition: background-color $transition-time;
+
+      &:hover {
+        background-color: darken($primary-color, 10%);
+      }
+
+      &.cancel-btn {
+        background-color: $danger-color;
+
+        &:hover {
+          background-color: darken($danger-color, 10%);
+        }
+      }
+    }
+  }
+
+  // Contenedor de espacios
+  .spaces-container {
+    margin-bottom: 30px;
+
+    h2 {
+      font-size: 2em;
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    .filters {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+
+      label {
+        font-size: 1.1em;
+        color: #555;
+      }
+
+      select {
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        font-size: 1em;
+        color: #555;
+        background-color: #fff;
+      }
+
+      button {
+        padding: 10px 20px;
+        background-color: $primary-color;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 1.1em;
+        transition: background-color $transition-time;
+
+        &:hover {
+          background-color: darken($primary-color, 10%);
+        }
+      }
+    }
+
+    .space {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: $card-bg-color;
+      padding: 20px;
+      margin-bottom: 15px;
+      border-radius: $border-radius;
+      box-shadow: $shadow;
+      transition: box-shadow $transition-time;
+
+      &:hover {
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+      }
+
+      .space-info {
+        flex-grow: 1;
+
+        h3 {
+          font-size: 1.3em;
+          color: #333;
+        }
+
+        p {
+          color: #555;
+        }
+      }
+
+      .reserve-btn {
+        padding: 12px 20px;
+        background-color: $secondary-color;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 1.1em;
+        transition: background-color $transition-time;
+
+        &:hover {
+          background-color: darken($secondary-color, 10%);
+        }
+      }
+    }
+
+    .no-spaces {
+      text-align: center;
+      color: #999;
+      font-size: 1.2em;
+    }
+  }
+
+  // Contenedor de contratos
+  .contracts-container {
+    h2 {
+      font-size: 2em;
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    .contract {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: $card-bg-color;
+      padding: 20px;
+      margin-bottom: 15px;
+      border-radius: $border-radius;
+      box-shadow: $shadow;
+      transition: box-shadow $transition-time;
+
+      &:hover {
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+      }
+
+      .contract-info {
+        flex-grow: 1;
+
+        h3 {
+          font-size: 1.3em;
+          color: #333;
+        }
+
+        p {
+          color: #555;
+        }
+      }
+
+      .cancel-btn {
+        padding: 12px 20px;
+        background-color: $danger-color;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 1.1em;
+        transition: background-color $transition-time;
+
+        &:hover {
+          background-color: darken($danger-color, 10%);
+        }
+      }
+    }
+
+    .no-contracts {
+      text-align: center;
+      color: #999;
+      font-size: 1.2em;
+    }
+  }
 }

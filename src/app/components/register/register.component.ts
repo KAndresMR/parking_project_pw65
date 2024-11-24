@@ -38,7 +38,6 @@ export class RegisterComponent implements OnInit{
 
   comeBack() {
     this.router.navigate(['/login']);
-    console.log("regres")
   }
 
   ngOnInit(): void {
