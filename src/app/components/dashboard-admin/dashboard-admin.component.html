@@ -1,22 +1,19 @@
 <div class="admin-container">
   <header class="admin-header">
-    <h1>PARQUEADERO</h1>    
+    <h1>PARQUEADERO</h1>
   </header>
   <div class="admin-content">
-    <nav class="admin-sidebar">      
+    <nav class="admin-sidebar">
     </nav>
     <main class="main-panel">
-      <h2>Bienvenido</h2>
-      <p>Aquí puedes gestionar todos los aspectos del parqueadero.</p>
+      <div class="placa">
+        <h3>Ingrese el numero de placa: </h3>
+        <input type="text" placeholder="Placa">
+      </div>
       <div class="stats">
         <div class="stat-card">Espacios Ocupados: {{ occupiedSpaces }}</div>
         <div class="stat-card">Usuarios Registrados: {{ registeredUsers }}</div>
         <div class="stat-card">Contratos Activos: {{ activeContracts }}</div>
-      </div>
-      <div class="quick-actions">
-        <button (click)="createContract()">Crear Nuevo Contrato</button>
-        <button (click)="addSpace()">Añadir Espacio</button>
-        <button (click)="manageUsers()">Gestionar Usuarios</button>
       </div>
     </main>
   </div>

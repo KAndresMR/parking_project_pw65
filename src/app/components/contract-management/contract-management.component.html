@@ -2,17 +2,15 @@
     <!-- Encabezado principal de la sección -->
     <header class="contracts-header">
         <h1>Gestión de Contratos</h1>
-        <p>Aquí puedes gestionar los contratos activos y sus detalles.</p>
+        <p>Gestiona los contratos activos y sus detalles desde esta sección.</p>
     </header>
 
     <div class="contracts-content">
         <!-- Filtros y búsqueda -->
         <div class="filter-bar">
-            <!-- Campo de búsqueda por texto -->
             <input type="text" placeholder="Buscar por nombre o ID del contrato..." [(ngModel)]="searchText" />
-            <!-- Filtro por estado del contrato -->
             <select [(ngModel)]="filterStatus">
-                <option value="">Todos</option>
+                <option value="">Todos los estados</option>
                 <option value="activo">Activo</option>
                 <option value="inactivo">Inactivo</option>
             </select>
@@ -22,18 +20,17 @@
         <table class="contracts-table">
             <thead>
                 <tr>
-                    <th>ID del Contrato</th>
-                    <th>Nombre del Cliente</th>
-                    <th>Fecha de Inicio</th>
-                    <th>Fecha de Expiración</th>
+                    <th>ID Contrato</th>
+                    <th>Cliente</th>
+                    <th>Inicio</th>
+                    <th>Expiración</th>
                     <th>Espacio</th>
                     <th>Estado</th>
-                    <th>Costo Total</th>
+                    <th>Costo</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
-                <!-- Iteración sobre contratos filtrados -->
                 <tr *ngFor="let contract of filteredContracts">
                     <td>{{ contract.id }}</td>
                     <td>{{ contract.clientName }}</td>
@@ -43,7 +40,6 @@
                     <td>{{ contract.status }}</td>
                     <td>{{ contract.cost | currency:'USD' }}</td>
                     <td>
-                        <!-- Botones de acción para editar y eliminar contratos -->
                         <button (click)="editContract(contract)">Editar</button>
                         <button (click)="deleteContract(contract)">Eliminar</button>
                     </td>
@@ -54,72 +50,46 @@
         <!-- Formulario para añadir o editar un contrato -->
         <div class="contract-form">
             <h2>{{ isEditing ? 'Editar Contrato' : 'Añadir Nuevo Contrato' }}</h2>
-            <form (submit)="saveContract()">                
-                <!-- Campo para seleccionar cliente -->
-                <div>
+            <form (submit)="saveContract()">
+                <div class="form-group">
                     <label>Cliente:</label>
-                    <input
-                        type="text"
-                        name="lblClient"
-                        [value]="selectedClientName"
-                        placeholder="Selecciona un cliente"
-                        readonly
-                        (click)="openClientModal()"
-                    />
+                    <input type="text" name="client" [value]="selectedClientName" placeholder="Selecciona un cliente" readonly (click)="openClientModal()" />
                 </div>
 
-                <!-- Campo para seleccionar espacio -->
-                <div>
+                <div class="form-group">
                     <label>Espacio:</label>
-                    <input
-                        type="text"
-                        [value]="selectedSpaceNum"
-                        placeholder="Selecciona un espacio"
-                        readonly
-                        (click)="openSpaceModal()"
-                    />
-                </div> 
+                    <input type="text" [value]="selectedSpaceNum" placeholder="Selecciona un espacio" readonly (click)="openSpaceModal()" />
+                </div>
 
-                <!-- Campos de fecha para inicio y expiración del contrato -->
-                <h3>Fecha en la que Inicia el contrato</h3>
-                <input
-                    type="date"
-                    [(ngModel)]="contractForm.startDate"
-                    (change)="calculateCost()"
-                    placeholder="Fecha de Inicio"
-                    name="startDate"
-                    required
-                />
-                <h3>Fecha en la que Termina el contrato</h3>
-                <input
-                    type="date"
-                    [(ngModel)]="contractForm.endDate"
-                    (change)="calculateCost()"
-                    placeholder="Fecha de Expiración"
-                    name="endDate"
-                    required
-                />
+                <div class="form-group">
+                    <label>Fecha de Inicio:</label>
+                    <input type="date" [(ngModel)]="contractForm.startDate" (change)="calculateCost()" name="startDate" required />
+                </div>
 
-                <!-- Campo de costo estimado -->
-                <div>
+                <div class="form-group">
+                    <label>Fecha de Expiración:</label>
+                    <input type="date" [(ngModel)]="contractForm.endDate" (change)="calculateCost()" name="endDate" required />
+                </div>
+
+                <div class="form-group">
                     <label>Costo Estimado:</label>
                     <input type="text" [value]="estimatedCost | currency:'USD'" readonly />
                 </div>
 
-                <!-- Selección del estado del contrato -->
-                <select [(ngModel)]="contractForm.status" name="status" required>
-                    <option value="Activo">Activo</option>
-                    <option value="Inactivo">Inactivo</option>
-                </select>
-
-                <!-- Mensaje de éxito al guardar -->
-                <div *ngIf="message" class="success-message">
-                    {{ message }}
+                <div class="form-group">
+                    <label>Estado del Contrato:</label>
+                    <select [(ngModel)]="contractForm.status" name="status" required>
+                        <option value="Activo">Activo</option>
+                        <option value="Inactivo">Inactivo</option>
+                    </select>
                 </div>
 
-                <!-- Botones de guardar y cancelar -->
-                <button type="submit">{{ isEditing ? 'Actualizar' : 'Guardar' }}</button>
-                <button type="button" (click)="cancelEdit()">Cancelar</button>
+                <div *ngIf="message" class="success-message">{{ message }}</div>
+
+                <div class="form-actions">
+                    <button type="submit">{{ isEditing ? 'Actualizar' : 'Guardar' }}</button>
+                    <button type="button" (click)="cancelEdit()">Cancelar</button>
+                </div>
             </form>
         </div>
     </div>
@@ -129,7 +99,6 @@
 <div *ngIf="isClientModalOpen" class="client-modal">
     <div class="modal-content">
         <h2>Seleccionar Cliente</h2>
-        <!-- Tabla de clientes disponibles -->
         <table class="users-table">
             <thead>
                 <tr>
@@ -140,7 +109,6 @@
                 </tr>
             </thead>
             <tbody>
-                <!-- Iteración sobre la lista de clientes -->
                 <tr *ngFor="let user of clients" (click)="selectClient(user)">
                     <td>{{ user.name }}</td>
                     <td>{{ user.email }}</td>
@@ -157,17 +125,15 @@
 <div *ngIf="isSpaceModalOpen" class="client-modal">
     <div class="modal-content">
         <h2>Seleccionar Espacio</h2>
-        <!-- Tabla de espacios disponibles -->
         <table class="users-table">
             <thead>
                 <tr>
                     <th>Número</th>
                     <th>Estado</th>
-                    <th>Tipo</th>                    
+                    <th>Tipo</th>
                 </tr>
             </thead>
             <tbody>
-                <!-- Iteración sobre la lista de espacios -->
                 <tr *ngFor="let space of spaces" (click)="selectSpace(space)">
                     <td>{{ space.number }}</td>
                     <td>{{ space.status }}</td>

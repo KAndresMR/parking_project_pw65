@@ -1,19 +1,19 @@
 <div class="spaces-management-container">
     <header class="spaces-header">
         <h1>Gestión de Espacios</h1>
-        <p>Aquí puedes gestionar los espacios de parqueo disponibles y ocupados.</p>
+        <p>Administra y organiza los espacios de parqueo de forma sencilla.</p>
     </header>
 
     <div class="spaces-content">
         <!-- Filtros y Búsqueda -->
         <div class="filter-bar">
             <input type="text" placeholder="Buscar por número de espacio..." [(ngModel)]="searchNumber" />
-            <select [(ngModel)]="filterStatus" >
+            <select [(ngModel)]="filterStatus">
                 <option value="">Todos</option>
                 <option value="disponible">Disponible</option>
                 <option value="ocupado">Ocupado</option>
             </select>
-            <select [(ngModel)]="filterType" >
+            <select [(ngModel)]="filterType">
                 <option value="">Todos</option>
                 <option value="normal">Normal</option>
                 <option value="discapacitados">Discapacitados</option>
@@ -22,48 +22,51 @@
                 <option value="vip">VIP</option>
             </select>
         </div>
+
         <!-- Tabla de Espacios -->
-        <table class="spaces-table">
-            <thead>
-                <tr>
-                    <th (click)="toggleOrden()">Número de Espacio <span>{{ ordenAscendente ? '🔼' : '🔽' }}</span></th>
-                    <th>Estado</th>
-                    <th>Tipo de Espacio</th>                    
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let space of getFilteredSpaces()">
-                    <td>{{ space.number }}</td>
-                    <td>{{ space.status }}</td>
-                    <td>{{ space.type }}</td>                    
-                    <td>
-                        <button (click)="editSpace(space)">Editar</button>                                            
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="table-wrapper">
+            <table class="spaces-table">
+                <thead>
+                    <tr>
+                        <th (click)="toggleOrden()">Número de Espacio <span>{{ ordenAscendente ? '🔼' : '🔽' }}</span></th>
+                        <th>Estado</th>
+                        <th>Tipo de Espacio</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let space of getFilteredSpaces()">
+                        <td>{{ space.number }}</td>
+                        <td>{{ space.status }}</td>
+                        <td>{{ space.type }}</td>
+                        <td>
+                            <button (click)="editSpace(space)">Editar</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
         <!-- Formulario para Añadir o Editar Espacio -->
         <div class="space-form">
             <h2>{{ isEditing ? 'Editar Espacio' : 'Añadir Nuevo Espacio' }}</h2>
             <form (submit)="saveSpace(); $event.preventDefault()">
-                <input type="number" [(ngModel)]="spaceForm.number" placeholder="Número de Espacio" name = "number" required />
-                <select [(ngModel)]="spaceForm.status" name = "status" required>
+                <input type="number" [(ngModel)]="spaceForm.number" placeholder="Número de Espacio" name="number" required />
+                <select [(ngModel)]="spaceForm.status" name="status" required>
                     <option value="Disponible">Disponible</option>
                     <option value="Ocupado">Ocupado</option>
                 </select>
-                <select [(ngModel)]="spaceForm.type" name = "type" required>
+                <select [(ngModel)]="spaceForm.type" name="type" required>
                     <option value="Normal">Normal</option>
                     <option value="Discapacitados">Discapacitados</option>
                     <option value="Cubierto">Cubierto</option>
                     <option value="Descubierto">Descubierto</option>
                     <option value="VIP">VIP</option>
                 </select>
-                
-                    <div *ngIf="message" class="success-message">
-                        {{ message }}
-                    </div>
+
+                <div *ngIf="message" class="success-message">
+                    {{ message }}
+                </div>
                 <button type="submit">{{ isEditing ? 'Actualizar' : 'Guardar' }}</button>
                 <button type="button" (click)="cancelEdit()">Cancelar</button>
             </form>

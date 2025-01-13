@@ -1,128 +1,208 @@
-// Variables básicas para diseño
-$primary-color: #3498db;
-$secondary-color: #2ecc71;
-$danger-color: #e74c3c;
-$text-color: #333;
-$background-color: #f9f9f9;
-$border-radius: 6px;
-
-// Contenedor principal
 .profile-container {
   padding: 20px;
-  max-width: 800px;
-  margin: 0 auto;
-  background-color: $background-color;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+
+  .close-btn {
+    padding: 10px 20px;
+    background-color: #e74c3c;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: block;
+    margin: 20px 0;
+
+    &:hover {
+      background-color: #c0392b;
+    }
+  }
 
   .profile-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    text-align: center;
     margin-bottom: 20px;
 
     .profile-image {
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      overflow: hidden;
-
+      margin-bottom: 15px;
       img {
-        width: 100%;
-        height: 100%;
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
         object-fit: cover;
       }
     }
 
     h2 {
-      font-size: 1.8em;
-      color: $text-color;
-      margin: 0;
+      font-size: 1.5rem;
+      color: #2c3e50;
+      margin-bottom: 10px;
     }
 
     .edit-btn {
-      padding: 8px 12px;
-      background-color: $primary-color;
-      color: white;
+      padding: 8px 15px;
+      background-color: #3498db;
+      color: #fff;
       border: none;
-      border-radius: $border-radius;
+      border-radius: 5px;
       cursor: pointer;
 
       &:hover {
-        background-color: darken($primary-color, 10%);
+        background-color: #2980b9;
       }
     }
   }
 
-  .spaces-container, .contracts-container {
-    margin-top: 20px;
+  .profile-info {
+    margin-bottom: 20px;
 
-    h2 {
-      font-size: 1.5em;
-      color: $text-color;
-      margin-bottom: 15px;
+    h3 {
+      font-size: 1.2rem;
+      color: #34495e;
+      margin-bottom: 10px;
     }
 
-    .item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 10px 15px;
-      background-color: white;
-      border: 1px solid #ddd;
-      border-radius: $border-radius;
-      margin-bottom: 10px;
+    .info-group {
+      margin-bottom: 15px;
 
-      .item-info {
-        flex: 1;
+      label {
+        font-weight: bold;
+        font-size: 1rem;
+        color: #7f8c8d;
+      }
 
+      span {
+        font-size: 1.1rem;
+        color: #2c3e50;
+      }
+    }
+  }
+
+  .profile-edit-form {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    
+    h3 {
+      font-size: 1.5rem;
+      color: #3498db;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+
+      label {
+        font-weight: bold;
+        font-size: 1rem;
+        color: #7f8c8d;
+      }
+
+      input {
+        width: 100%;
+        padding: 10px;
+        font-size: 1rem;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+      }
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #3498db;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 10px;
+
+      &:hover {
+        background-color: #2980b9;
+      }
+
+      &.cancel-btn {
+        background-color: #e74c3c;
+        margin-top: 5px;
+
+        &:hover {
+          background-color: #c0392b;
+        }
+      }
+    }
+  }
+
+  .spaces-container {
+    margin-top: 30px;
+
+    h2 {
+      font-size: 1.5rem;
+      color: #3498db;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .space {
+      background-color: #fff;
+      padding: 15px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.05);
+
+      .space-info {
         h3 {
-          font-size: 1.2em;
-          margin: 0;
-          color: $text-color;
+          font-size: 1.2rem;
+          color: #2c3e50;
         }
 
         p {
-          margin: 5px 0 0;
-          font-size: 0.9em;
-          color: lighten($text-color, 20%);
+          font-size: 1rem;
+          color: #7f8c8d;
         }
       }
 
-      .action-btns {
-        display: flex;
-        gap: 10px;
+      .reserve-btn {
+        padding: 8px 15px;
+        background-color: #27ae60;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 10px;
 
-        button {
-          padding: 8px 12px;
-          font-size: 0.9em;
-          border: none;
-          border-radius: $border-radius;
-          cursor: pointer;
-
-          &.reserve-btn {
-            background-color: $secondary-color;
-            color: white;
-
-            &:hover {
-              background-color: darken($secondary-color, 10%);
-            }
-          }
-
-          &.cancel-btn {
-            background-color: $danger-color;
-            color: white;
-
-            &:hover {
-              background-color: darken($danger-color, 10%);
-            }
-          }
+        &:hover {
+          background-color: #2ecc71;
         }
       }
     }
 
-    .no-items {
+    p {
       text-align: center;
-      color: lighten($text-color, 40%);
-      font-size: 1em;
+      color: #7f8c8d;
+      font-size: 1.1rem;
     }
+  }
+}
+
+.close-btn {
+  padding: 10px 20px;
+  background-color: #e74c3c;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  display: block;
+  margin: 20px 0;
+  text-align: center;
+
+  
+  &:hover {
+    background-color: #c0392b;
+  }
+
+  &:focus {
+    outline: none;
   }
 }

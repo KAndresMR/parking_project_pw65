@@ -1,54 +1,134 @@
 .horario-trabajo {
-    margin: 20px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  
     .schedule-header {
-        text-align: center;
-        margin-bottom: 20px;
-
-        h1 {
-            color: #1E40AF;
-        }
+      text-align: center;
+      margin-bottom: 20px;
+  
+      h1 {
+        font-size: 2rem;
+        color: #2c3e50;
+        font-weight: bold;
+      }
     }
-
+  
     .schedule-table {
-        width: 100%;
-        border-collapse: collapse;
+      width: 100%;
+      border-collapse: collapse;
+      background-color: #fff;
+  
+      th, td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+        font-size: 1rem;
+      }
+  
+      th {
+        background-color: #f4f6f7;
+        cursor: pointer;
+      }
+  
+      td {
+        font-size: 1rem;
+      }
+  
+      button {
+        padding: 8px 15px;
+        margin-right: 5px;
+        background-color: #3498db;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+  
+        &:hover {
+          background-color: #2980b9;
+        }
+      }
+    }
+  
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #27ae60;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+  
+      &:hover {
+        background-color: #2ecc71;
+      }
+    }
+  }
+  
+  .modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    z-index: 1000;
+  
+    form {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+      width: 400px;
+  
+      h3 {
+        font-size: 1.5rem;
+        color: #3498db;
         margin-bottom: 20px;
-
-        th,
-        td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
+        text-align: center;
+      }
+  
+      label {
+        display: block;
+        margin-bottom: 10px;
+        font-size: 1rem;
+      }
+  
+      input, select {
+        padding: 10px;
+        width: 100%;
+        margin-bottom: 15px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        font-size: 1rem;
+      }
+  
+      button {
+        padding: 10px 20px;
+        background-color: #3498db;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        width: 100%;
+        margin-top: 10px;
+  
+        &:hover {
+          background-color: #2980b9;
         }
-
-        th {
-            background-color: #f2f2f2;
+  
+        &.cancel-button {
+          background-color: #e74c3c;
+          &:hover {
+            background-color: #c0392b;
+          }
         }
-
-        button {
-            padding: 8px 12px;
-            margin-right: 5px;
-            background-color: #1E40AF;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-
-            &:hover {
-                background-color: #0d3a8f;
-            }
-        }
+      }
     }
-
-
-    .modal {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background-color: white;
-        padding: 20px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        z-index: 1000;
-    }
-}
+  }
+  

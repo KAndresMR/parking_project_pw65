@@ -1,131 +1,86 @@
 .admin-layout {
-    display: flex;
-    height: 100vh;
-  }
-  
-  .admin-sidebar {
-    width: 250px;
-    background-color: #363B8A;
-    padding: 20px;
-    color: #ecf0f1;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  height: 100vh; /* Asegura que la vista ocupe el 100% del alto de la ventana */
+  overflow: hidden;
+}
 
-    ul {
-      list-style: none;  // Elimina los puntos de la lista
-      padding: 0;
-      margin: 200px 0;  // Ajusta la posición de la lista más abajo
-      
-      li {
-        background-color: #374151;  // Color de fondo del botón
-        color: #fff;  // Color del texto
-        padding: 10px 15px;  // Espaciado interno para hacer más grandes los botones
-        margin-bottom: 30px;  // Espacio entre botones
-        text-align: center;  // Centra el texto en el botón
-        cursor: pointer;  // Hace que el cursor cambie a mano al pasar sobre el botón
-        border-radius: 5px;  // Bordes redondeados
-  
-        &:hover {
-          background-color: #363B8A;  // Cambia el color de fondo al pasar el mouse
-        }
-      }
-    }
+.admin-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 250px;
+  height: 97vh; /* Fija la barra lateral al alto completo de la ventana */
+  background-color: #1d1f27;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+  overflow-y: auto; /* Permite scroll interno */
 
-    .contact-info {
-      margin-top: 5px;  // Empuja el contenido hacia abajo
-      padding: 15px;  // Espaciado interno para que el texto no esté pegado a los bordes
-      background-color: #363B8A;  // Color de fondo de la caja
-      color: #fff;  // Color del texto
-      text-align: center;  // Centra el texto
-  
-      p {
-        margin: 5px 0;  // Espacio vertical entre las líneas de texto
-      }
-    }
-
-    .logout-button {
-      margin-top: auto;  // Empuja el contenido hacia abajo
-      width: 100%;  // Hace que el botón ocupe todo el ancho
-      padding: 8px;  // Espaciado interno para el botón
-      background-color: red;  // Color de fondo del botón
-      color: white;  // Color del texto
-      border: none;  // Sin borde
-      cursor: pointer;  // Cambia el cursor al pasar sobre el botón
-      font-size: 16px;  // Tamaño de fuente
-      transition: background-color 0.3s;  // Transición suave para el color de fondo
-  
-      &:hover {
-        background-color: darkred;  // Color más oscuro al pasar el ratón
-      }
-    }
-  }
-  
-  .admin-sidebar ul {
-    list-style-type: none;
+  ul {
+    list-style: none;
     padding: 0;
+    margin: 0;
+
+    li {
+      padding: 12px 20px;
+      margin: 10px 0;
+      color: #ffffff;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 8px;
+      transition: background-color 0.3s, transform 0.2s;
+
+      &:hover {
+        background-color: #4a4f61;
+        transform: scale(1.05);
+      }
+
+      &:active {
+        background-color: #3b4051;
+        transform: scale(0.95);
+      }
+    }
   }
-  
-  .admin-sidebar li {
-    margin: 15px 0;
-    cursor: pointer;
-    font-size: 18px;
+
+  .contact-info {
+    margin-top: auto;
+    padding: 10px 0;
+    border-top: 1px solid #4a4f61;
+    color: #d1d4db;
+    font-size: 14px;
+
+    p {
+      margin: 5px 0;
+    }
   }
-  
-  .admin-sidebar li:hover {
-    background-color: #34495e;
-    padding: 10px;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
-  }
-  
-  .admin-content {
-    flex: 1;
-    padding: 30px;
-    background-color: #ecf0f1;
-    overflow-y: auto;
-  }
-  
-  .admin-content h2 {
-    color: #34495e;
-    font-size: 24px;
-    margin-bottom: 20px;
-  }
-  
-  .stats {
-    display: flex;
-    gap: 20px;
-  }
-  
-  .stat-card {
-    flex: 1;
-    background-color: #fff;
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    font-size: 18px;
-    color: #2c3e50;
-    text-align: center;
-  }
-  
-  .quick-actions {
-    margin-top: 30px;
-  }
-  
-  .quick-actions button {
-    margin-right: 10px;
-    background-color: #3498db;
-    color: #fff;
+
+  .logout-button {
+    margin-top: 20px;
     padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+    width: 100%;
     font-size: 16px;
+    color: #ffffff;
+    background-color: #e63946;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+
+    &:hover {
+      background-color: #d62839;
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
   }
-  
-  .quick-actions button:hover {
-    background-color: #2980b9;
-  }
-  
-  .quick-actions button:active {
-    background-color: #1f5e7a;
-  }
-  
+}
+
+.admin-content {
+  margin-left: 250px;
+  flex-grow: 1;
+  padding: 30px;
+  overflow-y: auto;
+}

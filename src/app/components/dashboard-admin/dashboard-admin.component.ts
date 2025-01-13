@@ -33,4 +33,5 @@ export class DashboardAdminComponent implements OnInit {
   manageUsers() {
     this.router.navigate(['/admin/user']);
   }
+  
 }
