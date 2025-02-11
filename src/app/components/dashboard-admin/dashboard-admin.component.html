@@ -1,15 +1,42 @@
 <div class="admin-container">
   <header class="admin-header">
-    <h1>PARQUEADERO</h1>
+    <div class="title">
+      <h1>PARQUEADERO</h1>
+    </div>
   </header>
   <div class="admin-content">
     <nav class="admin-sidebar">
     </nav>
     <main class="main-panel">
       <div class="placa">
-        <h3>Ingrese el numero de placa: </h3>
-        <input type="text" placeholder="Placa">
+        <button (click)="toggleMenu()">{{menuVisible ? 'Cerra Ventana' : 'Ingresar Auto'}}</button>
+        <!-- Menú desplegable para ingresar vehículo -->
+        <div [class.show] = "menuVisible" class="auto-menu">
+          <ul>
+            <h3>Placa del vehículo: </h3>
+            <input type="text" [(ngModel)]="vehiclePlate" placeholder="Ingrese la placa">
+
+            <h3>Espacio asignado: </h3>
+            <input type="text" [(ngModel)]="assignedSpace" placeholder="Ingrese el código del espacio">
+
+            <li><button (click)="registerEntry()">Registrar Ingreso</button></li>
+          </ul>
+        </div>
       </div>
+
+      <div class="placa">
+        <button (click)="toggleExitMenu()">{{exitMenuVisible ? 'Cerrar Ventana':'Registrar Salida'}}</button>
+        <!-- Menú desplegable para registrar salida de vehículo -->
+        <div [class.show] = "exitMenuVisible" class="auto-menu">
+          <ul>
+            <h3>Placa del vehículo: </h3>
+            <input type="text" [(ngModel)]="vehiclePlateExit" placeholder="Ingrese la placa">
+
+            <li><button (click)="registerExit()">Registrar Salida</button></li>
+          </ul>
+        </div>
+      </div>
+
       <div class="stats">
         <div class="stat-card">Espacios Ocupados: {{ occupiedSpaces }}</div>
         <div class="stat-card">Usuarios Registrados: {{ registeredUsers }}</div>

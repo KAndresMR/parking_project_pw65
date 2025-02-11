@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ProfileService } from '../../../services/Customer/profile.service';
-import { AuthenticationService } from '../../../services/authentication.service';
+import { ProfileService } from '../../../services/firestore/profile.service';
+import { AuthenticationService } from '../../../services/firestore/authentication.service';
 import { CommonModule } from '@angular/common';
 import { Auth } from '@angular/fire/auth';
 import { from } from 'rxjs';
 import { Router } from '@angular/router';
 import { Space } from '../../../models/space.model';
 import { Contract } from '../../../models/contract.model';
-import { SpaceService } from '../../../services/space.service';
-import { ContractService } from '../../../services/contract.service';
+import { SpaceService } from '../../../services/firestore/space.service';
+import { ContractService } from '../../../services/firestore/contract.service';
 
 
 @Component({

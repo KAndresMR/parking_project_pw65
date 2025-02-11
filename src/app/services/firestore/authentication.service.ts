@@ -5,7 +5,7 @@ import { catchError, map, switchMap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { Firestore} from '@angular/fire/firestore';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
-import { User } from '../models/user.model';
+import { User } from '../../models/user.model';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 
 @Injectable({

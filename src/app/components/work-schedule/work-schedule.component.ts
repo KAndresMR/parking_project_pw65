@@ -1,17 +1,19 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Schedule } from '../../models/schedule.model';
-import { SheduleService } from '../../services/shedule.service';
+import { SheduleService } from '../../services/firestore/shedule.service';
+import { NotificationService } from '../../services/firestore/notification.service';
+import { NotificationsComponent } from "../notifications/notifications.component";
 
 @Component({
   selector: 'app-work-schedule',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, NotificationsComponent],
   templateUrl: './work-schedule.component.html',
   styleUrl: './work-schedule.component.scss'
 })
-export class WorkScheduleComponent {
+export class WorkScheduleComponent implements OnInit{
   horarios: Schedule[] = []; // Ahora especificamos que 'horarios' es un array de 'Horario'
   formularioVisible: boolean = false; // Controla la visibilidad del formulario
   editar: boolean = false; // Indica si estamos en modo de edición
@@ -20,8 +22,17 @@ export class WorkScheduleComponent {
   diasValidos: string[] = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo'];
   ordenAscendenteDia = true;
 
-  constructor(private scheduleService: SheduleService) {
+  constructor(private scheduleService: SheduleService, private notificationService: NotificationService) {
     this.cargarHorarios(); // Carga los horarios iniciales
+  }
+
+  ngOnInit() {
+    const currentTime = new Date().getHours();
+    if (currentTime >= 8 && currentTime <= 20) {
+      this.notificationService.addNotification(
+        'El parqueadero está abierto. Horario: 08:00 a 20:00'
+      );
+    }
   }
 
   toggleOrdenDia() {

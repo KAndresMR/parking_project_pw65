@@ -3,10 +3,12 @@
   <nav class="admin-sidebar">
     <ul>
       <!-- Navegación a las diferentes secciones del administrador -->
+      <li (click)="goTo('dashboard')">HOME</li>
       <li (click)="goTo('space')">Gestión de Espacios</li>
       <li (click)="goTo('contract')">Gestión de Contratos</li>
       <li (click)="goTo('user')">Gestión de Usuarios</li>
       <li (click)="goTo('schedule')">Horario de Trabajo</li>
+      <li (click)="goTo('history')">Historial</li>
     </ul>
     
     <!-- Información del usuario autenticado -->

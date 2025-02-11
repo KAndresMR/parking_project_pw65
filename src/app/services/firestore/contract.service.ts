@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Contract } from '../models/contract.model';
+import { Contract } from '../../models/contract.model';
 import { Firestore } from '@angular/fire/firestore';
 import { addDoc, collection, deleteDoc, doc, getDocs, query, updateDoc, where, writeBatch } from 'firebase/firestore';
 

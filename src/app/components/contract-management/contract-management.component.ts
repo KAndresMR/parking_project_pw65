@@ -2,10 +2,10 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Contract } from '../../models/contract.model';
-import { ContractService } from '../../services/contract.service';
+import { ContractService } from '../../services/firestore/contract.service';
 import { User } from '../../models/user.model';
-import { UserService } from '../../services/user.service';
-import { SpaceService } from '../../services/space.service';
+import { UserService } from '../../services/firestore/user.service';
+import { SpaceService } from '../../services/firestore/space.service';
 import { Space } from '../../models/space.model';
 
 @Component({

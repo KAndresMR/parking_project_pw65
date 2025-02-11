@@ -1,16 +1,19 @@
 import { Injectable } from '@angular/core';
 import { Firestore, collection, collectionData, query, where } from '@angular/fire/firestore';
 import { map, Observable } from 'rxjs';
-import { Contract } from '../models/contract.model';
-import { Space } from '../models/space.model';
-import { User } from '../models/user.model';
+import { Contract } from '../../models/contract.model';
+import { Space } from '../../models/space.model';
+import { User } from '../../models/user.model';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DashboardService {
 
-  constructor(private firestore: Firestore) { }
+  private apiUrl = 'http://localhost:3000'; // Cambia por tu URL base
+
+  constructor(private firestore: Firestore, private http: HttpClient) { }
 
   /**
    * Método para obtener el número de espacios ocupados.
@@ -46,4 +49,14 @@ export class DashboardService {
       map((data) => (data as Contract[]).length) // Convierte los datos a tipo Contract[] y devuelve la longitud (número de contratos activos)
     );
   }
+
+  registerVehicleEntry(data: { plate: string; entryDate: string; space: number }): Observable<any> {
+    return this.http.post(`${this.apiUrl}/vehicles/entry`, data);
+  }
+
+  registerVehicleExit(plate: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/vehicles/exit`, { plate });
+  }
+
+
 }

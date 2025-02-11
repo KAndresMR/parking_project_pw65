@@ -1,0 +1,58 @@
+.history-container {
+    padding: 20px;
+  }
+  
+  .history-header {
+    background-color: #1E40AF;
+    color: white;
+    padding: 10px;
+    text-align: center;
+    font-size: 24px;
+  }
+  
+  .history-content {
+    margin-top: 20px;
+  }
+  
+  .filter-options {
+    margin-bottom: 20px;
+    label {
+      font-size: 16px;
+    }
+    select {
+      padding: 8px;
+      font-size: 16px;
+      margin-left: 10px;
+    }
+  }
+  
+  .history-list {
+    margin-top: 20px;
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      th, td {
+        padding: 10px;
+        text-align: left;
+        border: 1px solid #ddd;
+      }
+      th {
+        background-color: #f2f2f2;
+      }
+      tr:hover {
+        background-color: #f9f9f9;
+      }
+    }
+  }
+  
+  .reports {
+    margin-top: 40px;
+    .report-card {
+      background-color: #f7f7f7;
+      padding: 15px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      margin-bottom: 15px;
+    }
+  }
+  

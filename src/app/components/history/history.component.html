@@ -1,0 +1,49 @@
+<div class="history-container">
+    <header class="history-header">
+      <h1>Historial de Parqueos</h1>
+    </header>
+  
+    <main class="history-content">
+      <section class="filter-options">
+        <label for="timePeriod">Filtrar por:</label>
+        <select id="timePeriod" [(ngModel)]="selectedPeriod">
+          <option value="daily">Hoy</option>
+          <option value="weekly">Semana</option>
+          <option value="monthly">Mes</option>
+        </select>
+      </section>
+  
+      <section class="history-list">
+        <h3>Historial de Parqueos</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>Placa</th>
+              <th>Espacio</th>
+              <th>Ingreso</th>
+              <th>Salida</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let record of parkingHistory">
+              <td>{{ record.date }}</td>
+              <td>{{ record.plate }}</td>
+              <td>{{ record.space }}</td>
+              <td>{{ record.entryTime }}</td>
+              <td>{{ record.exitTime }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+  
+      <section class="reports">
+        <h3>Reportes de Servicio</h3>
+        <div class="report-card" *ngFor="let report of reports">
+          <h4>{{ report.title }}</h4>
+          <p>{{ report.details }}</p>
+        </div>
+      </section>
+    </main>
+  </div>
+  

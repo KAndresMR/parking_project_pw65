@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { SpaceService } from '../../services/space.service';
+//import { SpaceService } from '../../services/firestore/space.service';
 import { Space } from '../../models/space.model';
+import { SpaceService } from '../../services/postgres/space.service';
 
 
 @Component({
@@ -32,7 +33,7 @@ export class SpaceManagementComponent implements OnInit {
     type: 'Normal',
   };
 
-  constructor(private spaceService: SpaceService) {}
+  constructor(private spaceService: SpaceService, private service: SpaceService) {}
 
   /**
    * Alterna el orden de los espacios de parqueo.
@@ -85,19 +86,37 @@ export class SpaceManagementComponent implements OnInit {
       this.message = 'Espacio actualizado exitosamente';
       setTimeout(() => (this.message = null), 3000); // Elimina el mensaje después de 3 segundos
       // Actualizar espacio existente
-      this.spaceService.updateSpace(this.spaceForm.id!, this.spaceForm).then(() => {
+      /*this.spaceService.updateSpace(this.spaceForm.id!, this.spaceForm).then(() => {
         this.isEditing = false;
         this.resetForm();
         this.loadSpaces();
-      });
+      });*/
     } else {
-      this.message = 'Espacio registrado exitosamente';
       setTimeout(() => (this.message = null), 3000); // Elimina el mensaje después de 3 segundos
       // Crear nuevo espacio      
-      this.spaceService.addSpace(this.spaceForm).then(() => {
+      // Crear objeto Vehicle con valores del formulario
+      const space: Space = { 
+        id: '', // Se genera en el backend
+        number: this.spaceForm.number,
+        status: this.spaceForm.status, // Si no se ingresa, queda vacío
+        type: this.spaceForm.type,
+      };
+      
+      // Enviar datos al servicio para registrarlo en el backend
+      this.service.registerSpace(space).subscribe({
+        next: () => {
+          alert('Espacio registrado correctamente.');
+        },
+        error: () => alert('Error al registrar el espacio.')
+      });
+
+
+
+      /*this.spaceService.addSpace(this.spaceForm).then(() => {
         this.resetForm();
         this.loadSpaces();
-      });
+      });*/
+      this.message = 'Espacio registrado exitosamente';
     }
   }
 
@@ -117,9 +136,9 @@ export class SpaceManagementComponent implements OnInit {
    * Carga los espacios de parqueo desde el servicio.
    */
   loadSpaces() {
-    this.spaceService.getSpaces().then(spaces => {
+    /*this.spaceService.getSpaces().then(spaces => {
       this.spaces = spaces;
-    });
+    });*/
   }
 
   /**
@@ -135,9 +154,9 @@ export class SpaceManagementComponent implements OnInit {
    * @param space El espacio a reservar.
    */
   reserveSpace(space: Space) {
-    this.spaceService.updateSpace(space.id!, { status: 'Ocupado' } as Partial<Space>).then(() => {
+    /*this.spaceService.updateSpace(space.id!, { status: 'Ocupado' } as Partial<Space>).then(() => {
       this.loadSpaces();
-    });
+    });*/
   }
 
   /**
@@ -145,9 +164,9 @@ export class SpaceManagementComponent implements OnInit {
    * @param space El espacio a liberar.
    */
   freeSpace(space: Space) {
-    this.spaceService.updateSpace(space.id!, { status: 'Disponible' } as Partial<Space>).then(() => {
+    /*this.spaceService.updateSpace(space.id!, { status: 'Disponible' } as Partial<Space>).then(() => {
       this.loadSpaces();
-    });
+    });*/
   }
 
 }

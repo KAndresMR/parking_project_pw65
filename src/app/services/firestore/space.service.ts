@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Firestore } from '@angular/fire/firestore';
 import { addDoc, collection, deleteDoc, doc, getDocs, query, updateDoc, where } from 'firebase/firestore';
-import { Space } from '../models/space.model';
+import { Space } from '../../models/space.model';
 
 @Injectable({
   providedIn: 'root'

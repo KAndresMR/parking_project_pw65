@@ -1,0 +1,7 @@
+<div class="notifications-container" *ngIf="notifications.length > 0">
+    <div *ngFor="let notification of notifications" class="notification">
+      <p>{{ notification }}</p>
+      <button (click)="clear()">Cerrar</button>
+    </div>
+  </div>
+  

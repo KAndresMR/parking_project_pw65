@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { Firestore } from '@angular/fire/firestore';
 import { addDoc, collection, deleteDoc, doc, getDocs, updateDoc } from 'firebase/firestore';
-import { Schedule } from '../models/schedule.model';
+import { Schedule } from '../../models/schedule.model';
 
 @Injectable({
   providedIn: 'root'

@@ -9,6 +9,7 @@ import { WorkScheduleComponent } from './components/work-schedule/work-schedule.
 import { RegisterComponent } from './components/register/register.component';
 import { ProfileComponent } from './components/Dashboard_customer/profile/profile.component';
 import { NgModule } from '@angular/core';
+import { HistoryComponent } from './components/history/history.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },   // Ruta para el login
@@ -24,6 +25,7 @@ export const routes: Routes = [
           { path: 'contract', component: ContractManagementComponent },
           { path: 'user', component: UserManagementComponent },
           { path: 'schedule', component: WorkScheduleComponent },
+          { path: 'history', component: HistoryComponent },
           { path: '', redirectTo: 'dashboard', pathMatch: 'full' }  // Redirección por defecto al Dashboard
         ]
       },
