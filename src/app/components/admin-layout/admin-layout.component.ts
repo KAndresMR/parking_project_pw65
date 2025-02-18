@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { AuthenticationService } from '../../services/firestore/authentication.service';
 import { from, ObservableInput } from 'rxjs';
+import { UserService } from '../../services/postgres/user.service';
 
 @Component({
   selector: 'app-admin-layout', 
@@ -16,7 +17,7 @@ export class AdminLayoutComponent implements OnInit {
   userName: string | undefined; // Almacena el nombre del usuario
 
   // Constructor: inyecta servicios necesarios
-  constructor(private router: Router, private authService: AuthenticationService) {}
+  constructor(private router: Router, private authService: AuthenticationService, private userService: UserService) {}
 
   /**
    * Método del ciclo de vida que se ejecuta al inicializar el componente.
@@ -44,6 +45,7 @@ export class AdminLayoutComponent implements OnInit {
    * Método para cerrar sesión y redirigir al usuario a la página de login.
    */
   logout() {
+    this.userService.logout();
     this.router.navigate(['/login']);
   }
 }

@@ -10,6 +10,7 @@ import { Space } from '../../../models/space.model';
 import { Contract } from '../../../models/contract.model';
 import { SpaceService } from '../../../services/firestore/space.service';
 import { ContractService } from '../../../services/firestore/contract.service';
+import { UserService } from '../../../services/postgres/user.service';
 
 
 @Component({
@@ -37,7 +38,8 @@ export class ProfileComponent implements OnInit{
     private fb: FormBuilder, 
     private profileService: ProfileService, 
     private spaceService: SpaceService, 
-    private authService: AuthenticationService
+    private authService: AuthenticationService,
+    private userService: UserService
   ) {
     this.profileForm = this.fb.group({
       name: ['', Validators.required],
@@ -127,8 +129,8 @@ export class ProfileComponent implements OnInit{
   }
 
   logout() {
+    this.userService.logout();
     this.router.navigate(['/login']);
-    return from(this.auth.signOut());    
   }
 
 }

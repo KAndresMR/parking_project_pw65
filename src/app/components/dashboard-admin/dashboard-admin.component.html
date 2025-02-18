@@ -11,23 +11,53 @@
       <div class="placa">
         <button (click)="toggleMenu()">{{menuVisible ? 'Cerra Ventana' : 'Ingresar Auto'}}</button>
         <!-- Menú desplegable para ingresar vehículo -->
-        <div [class.show] = "menuVisible" class="auto-menu">
-          <ul>
-            <h3>Placa del vehículo: </h3>
-            <input type="text" [(ngModel)]="vehiclePlate" placeholder="Ingrese la placa">
+        <div [class.show]="menuVisible" class="auto-menu">
+          <form>
+            <ul>
+              <h3>Placa del vehículo: </h3>
+              <input type="text" [(ngModel)]="vehicleForm.plate" placeholder="Ingrese la placa" name="plate" required>
 
-            <h3>Espacio asignado: </h3>
-            <input type="text" [(ngModel)]="assignedSpace" placeholder="Ingrese el código del espacio">
+              <h3>Espacio asignado: </h3>
+              <input type="text" [(ngModel)]="vehicleForm.space.number" placeholder="Ingrese el código del espacio"
+                name="space" required (click)="openSpaceModal()" >
 
-            <li><button (click)="registerEntry()">Registrar Ingreso</button></li>
-          </ul>
+              <!-- Modal para seleccionar el espacio -->
+              <div class="modal" tabindex="-1" role="dialog" *ngIf="showModal">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title">Seleccionar Espacio</h5>
+                      <button type="button" class="close" (click)="closeSpaceModal()">
+                        <span>&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <div class="space-list">
+                        <div *ngFor="let space of availableSpaces" (click)="selectSpace(space)"
+                          [ngClass]="{'selected': isSelected(space)}" class="space-item">
+                          <div class="space-number">{{ space.number }}</div>
+                          <div class="space-status">{{ space.status }}</div>
+                        </div>
+                      </div>
+                      <p *ngIf="availableSpaces.length === 0">No hay espacios disponibles</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+
+
+              <li><button (click)="registerEntry()">Registrar Ingreso</button></li>
+            </ul>
+          </form>
         </div>
       </div>
 
       <div class="placa">
         <button (click)="toggleExitMenu()">{{exitMenuVisible ? 'Cerrar Ventana':'Registrar Salida'}}</button>
         <!-- Menú desplegable para registrar salida de vehículo -->
-        <div [class.show] = "exitMenuVisible" class="auto-menu">
+        <div [class.show]="exitMenuVisible" class="auto-menu">
           <ul>
             <h3>Placa del vehículo: </h3>
             <input type="text" [(ngModel)]="vehiclePlateExit" placeholder="Ingrese la placa">
@@ -35,12 +65,6 @@
             <li><button (click)="registerExit()">Registrar Salida</button></li>
           </ul>
         </div>
-      </div>
-
-      <div class="stats">
-        <div class="stat-card">Espacios Ocupados: {{ occupiedSpaces }}</div>
-        <div class="stat-card">Usuarios Registrados: {{ registeredUsers }}</div>
-        <div class="stat-card">Contratos Activos: {{ activeContracts }}</div>
       </div>
     </main>
   </div>

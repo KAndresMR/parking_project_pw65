@@ -1,5 +1,8 @@
+import { Space } from "./space.model";
+import { User } from "./user.model";
+
 export interface Vehicle {
-    id: string;
+    id?: string;
     plate: string;
     ownerName?: string; // Propietario
     ownerContact?: string; // Telefono del propietario
@@ -7,4 +10,6 @@ export interface Vehicle {
     color: string;
     brand: string; // Marca
     registrationDate: Date; // Fecha de registro
+    space: Space;
+    user: User;
 }

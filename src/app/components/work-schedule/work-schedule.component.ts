@@ -2,9 +2,9 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Schedule } from '../../models/schedule.model';
-import { SheduleService } from '../../services/firestore/shedule.service';
 import { NotificationService } from '../../services/firestore/notification.service';
 import { NotificationsComponent } from "../notifications/notifications.component";
+import { ScheduleworkService } from '../../services/postgres/schedulework.service';
 
 @Component({
   selector: 'app-work-schedule',
@@ -17,14 +17,18 @@ export class WorkScheduleComponent implements OnInit{
   horarios: Schedule[] = []; // Ahora especificamos que 'horarios' es un array de 'Horario'
   formularioVisible: boolean = false; // Controla la visibilidad del formulario
   editar: boolean = false; // Indica si estamos en modo de edición
-  horarioSeleccionado: Schedule = { id: '', day: '', start: '', end: '' }; // Inicializa el horario seleccionado
   // Lista de días válidos
   diasValidos: string[] = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo'];
   ordenAscendenteDia = true;
+  scheduleForm: Schedule = this.getDefaultScheduleForm(); // Inicializa el horario seleccionado
 
-  constructor(private scheduleService: SheduleService, private notificationService: NotificationService) {
+  constructor(private scheduleService: ScheduleworkService, private notificationService: NotificationService) {
     this.cargarHorarios(); // Carga los horarios iniciales
   }
+
+  private getDefaultScheduleForm(): Schedule {
+      return { day: '', startTime: '', endTime: ''};
+    }
 
   ngOnInit() {
     const currentTime = new Date().getHours();
@@ -48,25 +52,24 @@ export class WorkScheduleComponent implements OnInit{
     });
   }
 
-  // Validación 5: Verificar que el día ingresado sea válido
-  validarDia(): boolean {
-    return this.diasValidos.includes(this.horarioSeleccionado.day.trim());
-  }
-
   cargarHorarios() {
-    // Aquí deberías implementar la lógica para cargar los horarios (por ejemplo, desde una API)    
-    this.scheduleService.getSchedules().then(contracts => {
-      this.horarios = contracts;
-    });
+    this.scheduleService.getSchedule().subscribe(
+      (shedules) => {
+        this.horarios = shedules;
+      },
+      (error) => {
+        console.error('Error al cargar los horarios:', error);
+      }
+    );
   }
 
   abrirFormulario(horario?: Schedule) {
     if (horario) {
       this.editar = true;
-      this.horarioSeleccionado = { ...horario }; // Cargar el horario a editar
+      this.scheduleForm = { ...horario }; // Cargar el horario a editar
   } else {
       this.editar = false;
-      this.horarioSeleccionado = {id:'', day: '', start: '', end: '' }; // Inicializa un nuevo horario
+      this.scheduleForm = this.getDefaultScheduleForm();
   }
   this.formularioVisible = true; // Muestra el formulario
   }
@@ -77,7 +80,7 @@ export class WorkScheduleComponent implements OnInit{
 
   async eliminarHorario(horario: Schedule) {
     if (horario.id) { // Verificar si el id existe
-      await this.scheduleService.deleteHorario(horario.id); // Llama al servicio para eliminar el horario
+      //await this.scheduleService.deleteHorario(horario.id); // Llama al servicio para eliminar el horario
       this.cargarHorarios(); // Recarga los horarios después de eliminar
     } else {
       console.error('Error: El horario no tiene un ID válido para eliminar');
@@ -89,17 +92,29 @@ export class WorkScheduleComponent implements OnInit{
       return; // Si la validación falla, no continúa
     }
     if (this.editar) {
-      await this.scheduleService.updateHorario(this.horarioSeleccionado); // Llama al servicio para actualizar el horario
+      this.scheduleService.updateSchedule(this.scheduleForm).subscribe({
+        next: () => {
+          this.cerrarFormulario(); // Cierra el formulario al terminar
+          this.cargarHorarios(); // Recarga los horarios para reflejar los cambios
+        },
+        error: () => alert('Error al actualizar el espacio.')
+      });
     } else {
-      await this.scheduleService.addHorario(this.horarioSeleccionado); // Llama al servicio para agregar un nuevo horario
+      this.scheduleService.registerSchedule(this.scheduleForm).subscribe({
+        next: (newSchedule) => {
+          console.log("Id del backEnd: ",newSchedule.id)
+          this.scheduleForm.id = newSchedule.id;
+          this.cerrarFormulario(); // Cierra el formulario al terminar
+          this.cargarHorarios(); // Recarga los horarios para reflejar los cambios
+        },
+        error: () => alert('Error al registrar el espacio.')
+      });
     }
-    this.cerrarFormulario(); // Cierra el formulario al terminar
-    this.cargarHorarios(); // Recarga los horarios para reflejar los cambios
   }
 
   cerrarFormulario() {
     this.formularioVisible = false;
-    this.horarioSeleccionado = { id:'', day: '', start: '', end: '' };
+    this.scheduleForm = this.getDefaultScheduleForm();
   }
 
   // Método general para validar el formulario
@@ -111,10 +126,6 @@ export class WorkScheduleComponent implements OnInit{
     }
     if (!this.validarDia()) {
       alert('El día ingresado no es válido. Debe ser un día de la semana.');
-      return false;
-    }
-    if (!this.validarFormatoHora(this.horarioSeleccionado.start) || !this.validarFormatoHora(this.horarioSeleccionado.end)) {
-      alert('Las horas deben estar en formato HH:MM.');
       return false;
     }
     if (!this.validarRangoDeTiempo()) {
@@ -134,56 +145,52 @@ export class WorkScheduleComponent implements OnInit{
 
   // Validación 1: Verificar que todos los campos requeridos estén llenos
   validarCamposRequeridos(): boolean {
-    const { day, start, end } = this.horarioSeleccionado;
-    return !!day && !!start && !!end; // Retorna true si todos los campos tienen valores
+    const { day, startTime, endTime } = this.scheduleForm;
+    return !!day && !!startTime && !!endTime; // Retorna true si todos los campos tienen valores
   }
 
-  // Validación 2: Comprobar que el formato de las horas sea HH:MM
-  validarFormatoHora(hora: string): boolean {
-    const regex = /^([01]\d|2[0-3]):([0-5]\d)$/; // Expresión regular para formato 24 horas
-    return regex.test(hora); // Retorna true si la hora tiene el formato correcto
-  }
-
-  // Validación 3: Asegurarse de que la hora de inicio sea anterior a la de fin
+  // Validación 2: Asegurarse de que la hora de inicio sea anterior a la de fin
   validarRangoDeTiempo(): boolean {
-    const [startHours, startMinutes] = this.horarioSeleccionado.start.split(':').map(Number);
-    const [endHours, endMinutes] = this.horarioSeleccionado.end.split(':').map(Number);
-    const startTime = startHours * 60 + startMinutes;
-    const endTime = endHours * 60 + endMinutes;
-    return startTime < endTime; // Retorna true si el inicio es antes del fin
+    const startTime = this.convertirHoraAMinutos(this.scheduleForm.startTime);
+    const endTime = this.convertirHoraAMinutos(this.scheduleForm.endTime);
+    return startTime < endTime; // Verifica que inicio sea antes que fin
   }
 
-  // Validación 4: Evitar duplicados de horarios en el mismo día
+  // Validación 3: Evitar duplicados de horarios en el mismo día
   validarDuplicados(): boolean {
     return !this.horarios.some(horario => 
-      horario.day === this.horarioSeleccionado.day && 
-      horario.start === this.horarioSeleccionado.start &&
-      horario.end === this.horarioSeleccionado.end &&
-      horario.id !== this.horarioSeleccionado.id // Ignorar si es el mismo horario en edición
+      horario.day === this.scheduleForm.day && 
+      horario.startTime === this.scheduleForm.startTime &&
+      horario.endTime === this.scheduleForm.endTime &&
+      horario.id !== this.scheduleForm.id // Ignorar si es el mismo horario en edición
     );
   }
 
-  // Validación 6: Evitar solapamientos de horarios
+  // Validación 4: Evitar solapamientos de horarios
   validarConflictos(): boolean {
-    const [newStartHours, newStartMinutes] = this.horarioSeleccionado.start.split(':').map(Number);
-    const [newEndHours, newEndMinutes] = this.horarioSeleccionado.end.split(':').map(Number);
-    const newStartTime = newStartHours * 60 + newStartMinutes;
-    const newEndTime = newEndHours * 60 + newEndMinutes;
+    const newStartTime = this.convertirHoraAMinutos(this.scheduleForm.startTime);
+    const newEndTime = this.convertirHoraAMinutos(this.scheduleForm.endTime);
 
-    // Recorre los horarios existentes para verificar conflictos
     return !this.horarios.some(horario => {
-      if (horario.day === this.horarioSeleccionado.day && horario.id !== this.horarioSeleccionado.id) {
-        const [startHours, startMinutes] = horario.start.split(':').map(Number);
-        const [endHours, endMinutes] = horario.end.split(':').map(Number);
-        const startTime = startHours * 60 + startMinutes;
-        const endTime = endHours * 60 + endMinutes;
+      if (horario.day === this.scheduleForm.day && horario.id !== this.scheduleForm.id) {
+        const startTime = this.convertirHoraAMinutos(horario.startTime);
+        const endTime = this.convertirHoraAMinutos(horario.endTime);
 
-        // Verifica solapamientos: (A comienza antes que B termine) y (B comienza antes que A termine)
+        // Detecta solapamientos: (A inicia antes de B termine) y (B inicia antes de A termine)
         return newStartTime < endTime && startTime < newEndTime;
       }
       return false;
     });
   }
 
+  // Validación 5: Verificar que el día ingresado sea válido
+  validarDia(): boolean {
+    return this.diasValidos.includes(this.scheduleForm.day.trim());
+  }
 
+  // 🔹 Método auxiliar: Convierte "HH:mm" a minutos totales del día
+  private convertirHoraAMinutos(hora: string): number {
+    const [horas, minutos] = hora.split(":").map(Number);
+    return horas * 60 + minutos;
+  }
 }

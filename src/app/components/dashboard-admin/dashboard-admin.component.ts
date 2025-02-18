@@ -5,6 +5,11 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SpaceService } from '../../services/postgres/space.service';
 import { Vehicle } from '../../models/vehicle.model';
+import { VehicleService } from '../../services/postgres/vehicle.service';
+import { Space } from '../../models/space.model';
+import { User } from '../../models/user.model';
+import { UserService } from '../../services/postgres/user.service';
+import { switchMap, tap } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard-admin',
@@ -13,71 +18,94 @@ import { Vehicle } from '../../models/vehicle.model';
   templateUrl: './dashboard-admin.component.html',
   styleUrl: './dashboard-admin.component.scss'
 })
-export class DashboardAdminComponent implements OnInit {
-  occupiedSpaces: number = 0; // Espacios ocupados
-  registeredUsers: number = 0; // Usuarios registrados
-  activeContracts: number = 0; // Contratos activos
+export class DashboardAdminComponent {
 
   menuVisible: boolean = false;
   exitMenuVisible: boolean = false;
+  vehiclePlateExit: string = '';
+  availableSpaces: Space[] = [];  // Aquí guardas los espacios disponibles
+  showModal: boolean = false;  // Controla la visibilidad del modal
+  selectedSpace: Space | null = null;  // Espacio seleccionado
+  vehicleForm: Vehicle = this.getDefaultVehicleForm();
+  userForm: User = this.getDefaultUserForm();
 
-  vehiclePlate: string = ''; // Para el número de placa ingresado
-  entryDate: string = '';   // Para la fecha de ingreso
-  assignedSpace: number | null = null; // Para el espacio asignado
+  constructor(private router: Router, private dashboardService: DashboardService,
+    private vehicleService: VehicleService, private spaceService: SpaceService, 
+    private userService: UserService) { }
 
-  vehiclePlateExit: string = ''; // Placa del vehículo al salir
-  
-  constructor(private router: Router, private dashboardService: DashboardService, private spaceService: SpaceService) { }
+    private getDefaultUserForm(): User {
+      const names = ['Juan Pérez', 'María López', 'Carlos Sánchez', 'Ana Torres', 'Luis Gómez'];
+      const userName = this.getRandomElement(names);
 
-  ngOnInit() {
-    this.loadDashboardStats();
-  }
+      // Crear usuario aleatorio
+      return {
+        name: userName,
+        email: 'morochoandres12@gmail.com',//this.generateRandomEmail(userName),
+        password: this.generateRandomPassword(),
+        role: 'cliente',
+        state: 'Activo'
+      };
+    }
 
-  loadDashboardStats() {
-    this.dashboardService.getOccupiedSpaces().subscribe(count => this.occupiedSpaces = count);
-    this.dashboardService.getRegisteredUsers().subscribe(count => this.registeredUsers = count);
-    this.dashboardService.getActiveContracts().subscribe(count => this.activeContracts = count);
-  }
+  /** Obtiene la estructura inicial del formulario */
+  private getDefaultVehicleForm(): Vehicle {
+    const colors = ['Azul', 'Amarillo', 'Negro', 'Blanco', 'Rojo', 'Verde', 'Gris'];
+    const brands = ['Toyota', 'Honda', 'Ford', 'Chevrolet', 'Nissan', 'BMW', 'Audi'];
+    const vehicleTypes = ['Moto', 'Camioneta', 'Camion', 'Sedán', 'SUV', 'Deportivo'];
+    const contacts = ['0991234567', '0987654321', '0976543210', '0965432109', '0954321098'];
 
-  toggleMenu() {
-    this.menuVisible = !this.menuVisible;
-  }
-
-  toggleExitMenu() {
-    this.exitMenuVisible = !this.exitMenuVisible;
+    return {
+      plate: '',
+      ownerContact: this.getRandomElement(contacts),
+      vehicleType: this.getRandomElement(vehicleTypes),
+      color: this.getRandomElement(colors),
+      brand: this.getRandomElement(brands),
+      registrationDate: new Date(),
+      // Espacio Ocupado por el cliente
+      space: {
+        number: 0, // Número del espacio
+        status: 'Disponible', // Estado del espacio
+        type: 'Normal' // Tipo del espacio
+      },
+      // Usuario propietario del vehiculo
+      user: {
+        name: '',
+        email: '',
+        password: '',
+        role: 'cliente',
+        state: 'Activo'
+      },
+    };
   }
 
   // BTN REGISTRO INGRESO
   registerEntry() {
-    if (!this.vehiclePlate || !this.assignedSpace) {
-      alert('Por favor, complete todos los campos para registrar el ingreso.');
-      return;
-    }
-
-    // Crear objeto Vehicle con valores del formulario
-    const vehiculo: Vehicle = { 
-      id: '', // Se genera en el backend
-      plate: this.vehiclePlate,
-      ownerName: '', // Si no se ingresa, queda vacío
-      ownerContact: '',
-      vehicleType: '',
-      color: '',
-      brand: '',
-      registrationDate: new Date() // Fecha y hora actual
-    };
-
-    // Enviar datos al servicio para registrarlo en el backend
-    /*this.spaceService.registerVehicle(vehiculo).subscribe({
+    this.userService.registerUser(this.userForm).pipe(
+      tap((newUser) => {
+        this.userForm.id = newUser.id; // Asigna el ID recibido del backend
+        this.selectUser(this.userForm);
+        this.vehicleForm.ownerName = this.userForm.name;
+        this.vehicleForm.user = newUser; // Asigna el usuario al vehículo
+      }),
+      switchMap(() => this.vehicleService.registerVehicle(this.vehicleForm)) // Registra el vehículo después del usuario
+    ).subscribe({
       next: () => {
         alert('Vehículo registrado correctamente.');
-        this.menuVisible = false; // Cerrar menú tras registrar
-        this.vehiclePlate = ''; // Limpiar campo de entrada
-        this.assignedSpace = null;
+        this.menuVisible = false;
+        this.resetForm();
       },
-      error: () => alert('Error al registrar el vehículo.')
-    });*/
+      error: (err) => {
+        console.error("❌ Error en el proceso:", err);
+        alert('Error al registrar el usuario o vehículo.');
+      }
+    });
   }
+  
 
+  selectUser(user: User) {
+    //this.selectedSpace = user;  // Asigna el espacio seleccionado
+    this.vehicleForm.user = user;  // Asigna el espacio al formulario
+  }
 
   // BTN REGISTRO DE SALIDA
   registerExit() {
@@ -89,11 +117,73 @@ export class DashboardAdminComponent implements OnInit {
     this.dashboardService.registerVehicleExit(this.vehiclePlateExit).subscribe({
       next: () => {
         alert('Salida registrada correctamente.');
-        this.loadDashboardStats();
         this.exitMenuVisible = false;
       },
       error: () => alert('Error al registrar la salida.')
     });
   }
+
+  // Función para obtener un elemento aleatorio de una lista
+  private getRandomElement(array: string[]): string {
+    return array[Math.floor(Math.random() * array.length)];
+  }
+
+  // Función para generar un correo electrónico aleatorio
+  private generateRandomEmail(name: string): string {
+    const domains = ['gmail.com', 'yahoo.com', 'outlook.com', 'hotmail.com'];
+    return `${name.toLowerCase().replace(/\s/g, '')}${Math.floor(Math.random() * 1000)}@${this.getRandomElement(domains)}`;
+  }
+
+  // Función para generar una contraseña aleatoria
+  private generateRandomPassword(): string {
+    return Math.random().toString(36).slice(-8); // Genera una contraseña aleatoria de 8 caracteres
+  }
+
+  // Carga los espacios disponibles
+  loadAvailableSpaces() {
+    this.spaceService.getSpaces().subscribe(spaces => {
+      this.availableSpaces = spaces.filter(space => space.status === 'Disponible');
+    }, error => {
+      console.error('Error al cargar espacios:', error);
+    });
+  }
+
+  // Asigna el espacio seleccionado al formulario
+  selectSpace(space: Space) {
+    this.selectedSpace = space;  // Asigna el espacio seleccionado
+    this.vehicleForm.space = space;  // Asigna el espacio al formulario
+    this.closeSpaceModal();  // Cierra el modal al seleccionar
+  }
+
+  // Resaltar el espacio seleccionado
+  isSelected(space: Space): boolean {
+    //console.log('Seleccionado: ', this.selectedSpace?.number);
+    return this.selectedSpace?.number === space.number;
+  }
+
+
+  toggleMenu() {
+    this.menuVisible = !this.menuVisible;
+  }
+
+  toggleExitMenu() {
+    this.exitMenuVisible = !this.exitMenuVisible;
+  }
+
+  resetForm() {
+    this.vehicleForm = this.getDefaultVehicleForm();
+  }
+
+  // Abre el modal de selección de espacio
+  openSpaceModal() {
+    this.showModal = true;
+    this.loadAvailableSpaces();
+  }
+
+  // Cierra el modal
+  closeSpaceModal() {
+    this.showModal = false;
+  }
+
 
 }

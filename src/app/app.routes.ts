@@ -10,26 +10,33 @@ import { RegisterComponent } from './components/register/register.component';
 import { ProfileComponent } from './components/Dashboard_customer/profile/profile.component';
 import { NgModule } from '@angular/core';
 import { HistoryComponent } from './components/history/history.component';
+import { authGuard } from './guards/auth.guard';
+import { VehicleManagementComponent } from './components/vehicle-management/vehicle-management.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },   // Ruta para el login
   { path: 'register', component: RegisterComponent },   // Ruta para el registro
-  { path: 'profile', component: ProfileComponent },   // Ruta para el registro
 
-    {
-        path: 'admin',
-        component: AdminLayoutComponent,
-        children: [
-          { path: 'dashboard', component: DashboardAdminComponent },
-          { path: 'space', component: SpaceManagementComponent },
-          { path: 'contract', component: ContractManagementComponent },
-          { path: 'user', component: UserManagementComponent },
-          { path: 'schedule', component: WorkScheduleComponent },
-          { path: 'history', component: HistoryComponent },
-          { path: '', redirectTo: 'dashboard', pathMatch: 'full' }  // Redirección por defecto al Dashboard
-        ]
-      },
-      { path: '', redirectTo: 'login', pathMatch: 'full' }
+  // Ruta protegida para clientes
+  { path: 'profile', component: ProfileComponent, canActivate: [authGuard] },
+
+  // Rutas protegidas para administradores
+  {
+    path: 'admin',
+    component: AdminLayoutComponent,
+    //canActivate: [authGuard],
+    children: [
+      { path: 'dashboard', component: DashboardAdminComponent },
+      { path: 'space', component: SpaceManagementComponent },
+      { path: 'contract', component: ContractManagementComponent },
+      { path: 'user', component: UserManagementComponent },
+      { path: 'schedule', component: WorkScheduleComponent },
+      { path: 'history', component: HistoryComponent },
+      { path: 'vehicle', component: VehicleManagementComponent },
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' }  // Redirección por defecto al Dashboard
+    ]
+  },
+  { path: '', redirectTo: 'login', pathMatch: 'full' }
 ];
 
 @NgModule({

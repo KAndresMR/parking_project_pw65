@@ -43,7 +43,7 @@
         <!-- Formulario para Añadir o Editar Usuario -->
         <div class="user-form">
             <h2>{{ isEditing ? 'Editar Usuario' : 'Añadir Nuevo Usuario' }}</h2>
-            <form (submit)="saveUser()">
+            <form (ngSubmit)="saveUser(); $event.preventDefault()">
                 <div class="form-group">
                     <label for="name">Nombre Completo</label>
                     <input type="text" [(ngModel)]="userForm.name" name="name" id="name" placeholder="Nombre Completo" required />
@@ -59,8 +59,8 @@
                 <div class="form-group">
                     <label for="role">Rol</label>
                     <select [(ngModel)]="userForm.role" name="role" id="role" required>
-                        <option value="admin">Administrador</option>
-                        <option value="user">Usuario</option>
+                        <option value="administrador">Administrador</option>
+                        <option value="cliente">Cliente</option>
                     </select>
                 </div>
 

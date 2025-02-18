@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { Vehicle } from '../../models/vehicle.model';
 import { Space } from '../../models/space.model';
 
@@ -15,16 +15,30 @@ export class SpaceService {
   constructor(private http: HttpClient) {}
 
   registerSpace(space: Space): Observable<any> {
-    console.log('Datos del formulario:', space);
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Access-Control-Allow-Origin': 'http://localhost:4200'
-    });
-    return this.http.post(this.apiUrl, space, {headers});
+    return this.http.post(`${this.apiUrl}/create`, space);
   }
 
   getSpaces(): Observable<Space[]> {
-    return this.http.get<Space[]>(this.apiUrl);
+    const token = localStorage.getItem('token');
+    //console.log("Token: "+token);
+    if (!token) {
+      console.error('🚨 No hay token guardado en localStorage');
+      return throwError(() => new Error('Token no encontrado'));
+    }
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.get<Space[]>(`${this.apiUrl}/spaces`,{ headers });
+  }
+
+  updateSpace(space: Space) {
+    const token = localStorage.getItem('token');
+    //console.log("Token: "+token);
+    if (!token) {
+      console.error('🚨 No hay token guardado en localStorage');
+      return throwError(() => new Error('Token no encontrado'));
+    }
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    //console.log("Llegada de datos: ", space);
+    return this.http.put(`${this.apiUrl}/${space.id}`, space, { headers });
   }
 
   

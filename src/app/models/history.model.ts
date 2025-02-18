@@ -1,4 +1,4 @@
-export interface Vehicle {
+export interface History {
     id: string;
     vehicleId: string; // Id del vehiculo
     entryDateTime: Date; // Entrada del vehiculo
@@ -6,4 +6,5 @@ export interface Vehicle {
     assignedSpace: string; // Espacio asignado
     status: string; // Estado (Ingresado, Retirado)
     duration: number; // Tiempo total de duracion del vehiculo
+
 }

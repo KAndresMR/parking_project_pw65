@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 //import { SpaceService } from '../../services/firestore/space.service';
 import { Space } from '../../models/space.model';
 import { SpaceService } from '../../services/postgres/space.service';
+import { ValidatorService } from '../../services/utils/validator.service';
 
 
 @Component({
@@ -14,40 +15,35 @@ import { SpaceService } from '../../services/postgres/space.service';
   styleUrl: './space-management.component.scss'
 })
 export class SpaceManagementComponent implements OnInit {
-
-  isEditing: boolean = false; // Estado de edición
   searchNumber: string = ''; // Número de espacio a buscar
+  isEditing: boolean = false; // Estado de edición
   filterStatus: string = ''; // Filtro por estado del espacio (Disponible, Ocupado, etc.)
   filterType: string = ''; // Filtro por tipo de espacio
   message: string | null = null; // Mensaje de éxito al guardar o actualizar
   ordenAscendente: boolean = false; // Controla si el orden es ascendente o descendente
+  spaces: Space[] = []; // Lista de espacios de parqueo
 
-  // Lista de espacios de parqueo
-  spaces: Space[] = [];
+  // Formulario inicializado con valores por defecto
+  spaceForm: Space = this.getDefaultSpaceForm();
 
-  // Objeto para almacenar los datos del espacio en el formulario
-  spaceForm: Space = {
-    id: '',
-    number: 0,
-    status: 'Disponible',
-    type: 'Normal',
-  };
+  constructor(private spaceService: SpaceService, private validator: ValidatorService) {}
 
-  constructor(private spaceService: SpaceService, private service: SpaceService) {}
+  ngOnInit() {
+    this.loadSpaces();
+  }
 
-  /**
-   * Alterna el orden de los espacios de parqueo.
-   * Ordena los espacios por número, ascendente o descendente.
-   */
+  /** Obtiene la estructura inicial del formulario */
+  private getDefaultSpaceForm(): Space {
+    return { number: 0, status: 'Disponible', type: 'Normal' };
+  }
+
+  /** Alterna el orden de los espacios de parqueo */
   toggleOrden() {
     this.ordenAscendente = !this.ordenAscendente; // Alternar el orden
     this.spaces.sort((a, b) => this.ordenAscendente ? a.number - b.number : b.number - a.number);
   }
 
-  /**
-   * Filtra los espacios según los criterios especificados (número, estado, tipo).
-   * @returns Lista de espacios filtrados.
-   */
+  /** Filtra los espacios según los criterios especificados */
   getFilteredSpaces(): Space[] {
     return this.spaces.filter(space => {
       // Filtro por número de espacio
@@ -60,92 +56,59 @@ export class SpaceManagementComponent implements OnInit {
     });
   }
 
-  /**
-   * Método llamado cuando el componente es inicializado.
-   * Carga los espacios de parqueo.
-   */
-  ngOnInit() {
-    this.loadSpaces();
+  /** Carga los espacios de parqueo desde el servicio */
+  loadSpaces() {
+    this.spaceService.getSpaces().subscribe(
+      (spaces) => {
+        this.spaces = spaces;
+      },
+      (error) => {
+        console.error('Error al cargar los espacios:', error);
+      }
+    );
   }
-
-  /**
-   * Activa el modo de edición para un espacio específico.
-   * @param space El espacio a editar.
-   */
+  
   editSpace(space: Space) {
     this.spaceForm = { ...space };
     this.isEditing = true;
   }
 
-  /**
-   * Guarda los cambios en el espacio.
-   * Si es edición, actualiza el espacio, si es creación, agrega un nuevo espacio.
-   */
+  /** Guarda los cambios en un espacio (creación o edición) */
   saveSpace() {
     if (this.isEditing) {
       this.message = 'Espacio actualizado exitosamente';
       setTimeout(() => (this.message = null), 3000); // Elimina el mensaje después de 3 segundos
-      // Actualizar espacio existente
-      /*this.spaceService.updateSpace(this.spaceForm.id!, this.spaceForm).then(() => {
-        this.isEditing = false;
-        this.resetForm();
-        this.loadSpaces();
-      });*/
+      this.spaceService.updateSpace(this.spaceForm).subscribe({
+        next: () => {
+          this.message = 'Espacio actualizado exitosamente';
+          this.resetForm();
+          this.loadSpaces();
+        },
+        error: () => alert('Error al actualizar el espacio.')
+      });
     } else {
       setTimeout(() => (this.message = null), 3000); // Elimina el mensaje después de 3 segundos
       // Crear nuevo espacio      
-      // Crear objeto Vehicle con valores del formulario
-      const space: Space = { 
-        id: '', // Se genera en el backend
-        number: this.spaceForm.number,
-        status: this.spaceForm.status, // Si no se ingresa, queda vacío
-        type: this.spaceForm.type,
-      };
-      
-      // Enviar datos al servicio para registrarlo en el backend
-      this.service.registerSpace(space).subscribe({
-        next: () => {
-          alert('Espacio registrado correctamente.');
+      this.spaceService.registerSpace(this.spaceForm).subscribe({
+        next: (newSpace) => {
+          this.spaceForm.id = newSpace.id; // Asigna el ID recibido del backend
+          this.resetForm();
+          this.loadSpaces();
         },
         error: () => alert('Error al registrar el espacio.')
       });
-
-
-
-      /*this.spaceService.addSpace(this.spaceForm).then(() => {
-        this.resetForm();
-        this.loadSpaces();
-      });*/
       this.message = 'Espacio registrado exitosamente';
     }
   }
 
-  /**
-   * Método para restablecer el formulario después de guardar.
-   */
+  /** Restablece el formulario a su estado inicial */
   resetForm() {
-    this.spaceForm = {
-      id: '',
-      number: 0,
-      status: 'Disponible',
-      type: 'Normal',
-    };
+    this.spaceForm = this.getDefaultSpaceForm();
+    this.isEditing = false;
   }
 
-  /**
-   * Carga los espacios de parqueo desde el servicio.
-   */
-  loadSpaces() {
-    /*this.spaceService.getSpaces().then(spaces => {
-      this.spaces = spaces;
-    });*/
-  }
-
-  /**
-   * Cancela la edición y restablece el formulario.
-   */
   cancelEdit() {
-    this.spaceForm = { number: 0, status: 'Disponible', type: 'Normal' };
+    this.resetForm();
     this.isEditing = false;
   }
 

@@ -3,6 +3,7 @@ import { Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { AuthenticationService } from '../../services/firestore/authentication.service';
+import { UserService } from '../../services/postgres/user.service';
 
 @Component({
   selector: 'app-login',
@@ -15,7 +16,8 @@ export class LoginComponent {
   fb = inject(FormBuilder);    
   error: string | null = null;
 
-  constructor(private authService: AuthenticationService, private router: Router) {
+  constructor(private authService: AuthenticationService, private router: Router, 
+    private userService: UserService) {
 
   }
 
@@ -30,7 +32,25 @@ export class LoginComponent {
       const email = this.form.value.email as string;
       const password = this.form.value.password as string;
       try{
-        await this.authService.login(email, password);
+        this.userService.login({ email , password }).subscribe({
+          next: (response) => {
+            const role = localStorage.getItem('role');
+            console.log('Token recibido:', response.token);
+            if (role === 'administrador') {
+              this.router.navigate(['/admin']);
+            } else if(role === 'cliente'){
+              this.router.navigate(['/profile']);
+            } else {
+              alert('Usuario no registrado');
+            }
+            //this.userService.saveToken(response.token);
+          },
+          error: (err) => {
+            console.error(err);
+            alert('Credenciales incorrectas')
+          }
+        });
+
       } catch (error) {
         console.error('Error en el inicio de sesión:', error);
       }            

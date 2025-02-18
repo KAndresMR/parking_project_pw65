@@ -1,0 +1,51 @@
+<div class="spaces-management-container">
+    <header class="spaces-header">
+        <h1>Gestión de Vehiculos</h1>
+        <p>Administra y organiza los vehiculos de forma sencilla.</p>
+    </header>
+
+    <div class="spaces-content">
+        <!-- Filtros y Búsqueda -->
+        <div class="filter-bar">
+            <input type="text" placeholder="Buscar por placa..." [(ngModel)]="searchPlate" (input)="applyFilters()"/>
+            <select [(ngModel)]="filterVehicleType" (change)="applyFilters()">
+                <option value="">Todos</option>
+                <option value="moto">Moto</option>
+                <option value="camioneta">Camioneta</option>
+                <option value="camion">Camion</option>
+                <option value="suv">SUV</option>
+                <option value="deportivo">Deportivo</option>
+            </select>
+        </div>
+
+        <!-- Tabla de Vehiculos -->
+        <div class="table-wrapper" *ngIf="filteredVehicles.length > 0; else noVehicles">
+            <table class="spaces-table">
+                <thead>
+                    <tr>
+                        <th>Placa</th>
+                        <th>Propietario</th>
+                        <th>Espacio Asignado</th>
+                        <th>Tipo</th>
+                        <th>Marca</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let vehicle of filteredVehicles">
+                        <td>{{ vehicle.plate }}</td>
+                        <td>{{ vehicle.user?.name}}</td>
+                        <td>{{ vehicle.space.number }}</td>
+                        <td>{{ vehicle.vehicleType }}</td>
+                        <td>{{ vehicle.brand }}</td>
+                        
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Mensaje si no hay vehículos -->
+        <ng-template #noVehicles>
+            <p class="no-data">No hay vehículos registrados.</p>
+        </ng-template>
+    </div>
+</div>
