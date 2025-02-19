@@ -2,11 +2,11 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Contract } from '../../models/contract.model';
-import { ContractService } from '../../services/firestore/contract.service';
 import { User } from '../../models/user.model';
-import { UserService } from '../../services/firestore/user.service';
-import { SpaceService } from '../../services/firestore/space.service';
 import { Space } from '../../models/space.model';
+import { ContractService } from '../../services/postgres/contract.service';
+import { UserService } from '../../services/postgres/user.service';
+import { SpaceService } from '../../services/postgres/space.service';
 
 @Component({
   selector: 'app-contract-management',
@@ -81,12 +81,19 @@ export class ContractManagementComponent implements OnInit {
 
     if (this.isEditing) {
       // Actualizar contrato existente
-      await this.contractService.updateContract(this.contractForm.id.toString(), this.contractForm);
+      //await this.contractService.updateContract(this.contractForm.id.toString(), this.contractForm);
       this.message = 'Contrato actualizado exitosamente';
     } else {
       // Registrar un nuevo contrato
       if (this.selectedClientName && this.selectedSpaceNum) {
-        await this.contractService.addContract(this.contractForm, this.idUser, this.idSpace);
+        this.contractService.registerContract(this.contractForm).subscribe({
+          next: (newContract) => {
+            this.contractForm.id = newContract.id; // Asigna el ID recibido del backend
+            this.resetForm();
+            this.loadContracts();
+          },
+          error: () => alert('Error al registrar el espacio.')
+        });
         this.message = 'Contrato registrado exitosamente';
       } else {
         this.message = 'Por favor complete todos los campos necesarios!';
@@ -108,7 +115,7 @@ export class ContractManagementComponent implements OnInit {
     if (!contract.id) return;
 
     try {
-      await this.contractService.deleteContract(contract);
+      //await this.contractService.deleteContract(contract);
       alert('Contrato eliminado correctamente');
       this.loadContracts();
     } catch (error) {
@@ -133,9 +140,14 @@ export class ContractManagementComponent implements OnInit {
 
   // Cargar todos los contratos desde el servicio
   loadContracts() {
-    this.contractService.getSpaces().then(contracts => {
-      this.contracts = contracts;
-    });
+    this.contractService.getContracts().subscribe(
+      (contracts) => {
+        this.contracts = contracts;
+      },
+      (error) => {
+        console.error('Error al cargar los contratos:', error);
+      }
+    );
   }
 
   // Cancelar edición de contrato
@@ -162,9 +174,14 @@ export class ContractManagementComponent implements OnInit {
   // Abrir el modal para seleccionar un cliente
   openClientModal() {
     this.isClientModalOpen = true;
-    this.userService.getUsers().then(users => {
-      this.clients = users;
-    });
+    this.userService.getUsers().subscribe(
+      (users) => {
+        this.clients = users;
+      },
+      (error) => {
+        console.error('Error al cargar los usuarios:', error);
+      }
+    );
   }
 
   // Cerrar el modal de cliente
@@ -174,18 +191,23 @@ export class ContractManagementComponent implements OnInit {
 
   // Seleccionar un cliente del modal
   selectClient(user: User) {
-    this.selectedClientName = user.name;
+    this.selectedClientName = user.name || '';
     this.idUser = user.id || '';
-    this.contractForm.clientName = user.name;
+    this.contractForm.clientName = user.name || '';
     this.closeClientModal();
   }
 
   // Abrir el modal para seleccionar un espacio
   openSpaceModal() {
     this.isSpaceModalOpen = true;
-    this.spaceService.getSpaces().then(spaces => {
-      this.spaces = spaces;
-    });
+    this.spaceService.getSpaces().subscribe(
+      (spaces) => {
+        this.spaces = spaces;
+      },
+      (error) => {
+        console.error('Error al cargar los usuarios:', error);
+      }
+    );
   }
 
   // Cerrar el modal de espacio

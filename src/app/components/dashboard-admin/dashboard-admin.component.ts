@@ -40,7 +40,7 @@ export class DashboardAdminComponent {
       // Crear usuario aleatorio
       return {
         name: userName,
-        email: 'morochoandres12@gmail.com',//this.generateRandomEmail(userName),
+        email: this.generateRandomEmail(userName),
         password: this.generateRandomPassword(),
         role: 'cliente',
         state: 'Activo'

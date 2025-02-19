@@ -2,13 +2,14 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, Observable, tap, throwError } from 'rxjs';
 import { User } from '../../models/user.model';
+import { environment } from '../../config';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
 
-  private apiUrl = 'http://localhost:8080/parking_projects_backend-1.0-SNAPSHOT/rs/user';
+  private apiUrl = `${environment.apiUrl}/user`;
 
   constructor(private http: HttpClient) { }
 
@@ -29,7 +30,14 @@ export class UserService {
 
   updateUser(user: User) {
     //console.log("Llegada de datos: ", user);
-    return this.http.put(`${this.apiUrl}/${user.id}`, user);
+    const token = localStorage.getItem('token');
+        //console.log("Token: "+token);
+        if (!token) {
+          console.error('🚨 No hay token guardado en localStorage');
+          return throwError(() => new Error('Token no encontrado'));
+        }
+        const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.put(`${this.apiUrl}/${user.id}`, user, { headers });
   }
 
   login(credentials: { email: string; password: string }): Observable<any> {
@@ -61,14 +69,6 @@ export class UserService {
     console.log("Token en localStoraga: "+ localStorage.length);
     localStorage.removeItem('token');
     console.log("Token removido: "+ localStorage.length);
-  }
-
-  // Método para hacer peticiones con autenticación
-  getSecureData(): Observable<any> {
-    const token = this.getToken(); // Obtén el token desde el localStorage
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`); // Agrega el token al header
-
-    return this.http.get(`${this.apiUrl}/secure/data`, { headers }); // Llama al endpoint protegido
   }
 
 }
