@@ -22,7 +22,7 @@ export class ContractService {
         return throwError(() => new Error('Token no encontrado'));
       }
       const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-      return this.http.post(`${this.apiUrl}`, contract, { headers });
+      return this.http.post(`${this.apiUrl}/create`, contract, { headers });
     }
   
     getContracts(): Observable<Contract[]> {
