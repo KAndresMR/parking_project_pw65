@@ -10,6 +10,8 @@ import { Space } from '../../models/space.model';
 import { User } from '../../models/user.model';
 import { UserService } from '../../services/postgres/user.service';
 import { switchMap, tap } from 'rxjs';
+import { TicketService } from '../../services/postgres/ticket.service';
+import { Ticket } from '../../models/ticket.model';
 
 @Component({
   selector: 'app-dashboard-admin',
@@ -30,22 +32,25 @@ export class DashboardAdminComponent {
   userForm: User = this.getDefaultUserForm();
 
   constructor(private router: Router, private dashboardService: DashboardService,
-    private vehicleService: VehicleService, private spaceService: SpaceService, 
-    private userService: UserService) { }
+    private vehicleService: VehicleService, private spaceService: SpaceService,
+    private userService: UserService, private ticketService: TicketService) { }
 
-    private getDefaultUserForm(): User {
-      const names = ['Juan Pérez', 'María López', 'Carlos Sánchez', 'Ana Torres', 'Luis Gómez'];
-      const userName = this.getRandomElement(names);
 
-      // Crear usuario aleatorio
-      return {
-        name: userName,
-        email: this.generateRandomEmail(userName),
-        password: this.generateRandomPassword(),
-        role: 'cliente',
-        state: 'Activo'
-      };
-    }
+
+
+  private getDefaultUserForm(): User {
+    const names = ['Juan Pérez', 'María López', 'Carlos Sánchez', 'Ana Torres', 'Luis Gómez'];
+    const userName = this.getRandomElement(names);
+
+    // Crear usuario aleatorio
+    return {
+      name: userName,
+      email: this.generateRandomEmail(userName),
+      password: this.generateRandomPassword(),
+      role: 'cliente',
+      state: 'Activo'
+    };
+  }
 
   /** Obtiene la estructura inicial del formulario */
   private getDefaultVehicleForm(): Vehicle {
@@ -84,23 +89,37 @@ export class DashboardAdminComponent {
       tap((newUser) => {
         this.userForm.id = newUser.id; // Asigna el ID recibido del backend
         this.selectUser(this.userForm);
-        this.vehicleForm.ownerName = this.userForm.name;
         this.vehicleForm.user = newUser; // Asigna el usuario al vehículo
       }),
       switchMap(() => this.vehicleService.registerVehicle(this.vehicleForm)) // Registra el vehículo después del usuario
     ).subscribe({
-      next: () => {
-        alert('Vehículo registrado correctamente.');
-        this.menuVisible = false;
-        this.resetForm();
+      next: (newVehicle) => {
+        // Ahora registramos el ticket con la información del vehículo
+        const newTicket: Ticket = {
+          vehicle: newVehicle, // El vehículo recién registrado
+          state: 'Activo', // Estado del ticket
+          entryDateTime: Date.now(), // Fecha y hora de entrada
+          exitDateTime: 0, // Inicialmente 0 (puede actualizarse luego)
+        };
+
+        this.ticketService.registerTicket(newTicket).subscribe({
+          next: (newT) => {
+            newTicket.id = newT.id; // Asigna el ID recibido del backend
+            console.log("Ticket registrado con ID:", newTicket.id);
+            alert('Vehículo y ticket registrados correctamente.');
+            this.menuVisible = false;
+            this.resetForm();
+          },
+          error: () => alert('Error al registrar el ticket.')
+        });
       },
-      error: (err) => {
-        console.error("❌ Error en el proceso:", err);
-        alert('Error al registrar el usuario o vehículo.');
-      }
+      error: () => alert('Error al registrar el usuario o vehículo.')
     });
   }
-  
+
+
+
+
 
   selectUser(user: User) {
     //this.selectedSpace = user;  // Asigna el espacio seleccionado
@@ -112,6 +131,10 @@ export class DashboardAdminComponent {
     if (!this.vehiclePlateExit) {
       alert('Por favor, ingrese la placa del vehículo para registrar la salida.');
       return;
+
+
+
+      
     }
 
     this.dashboardService.registerVehicleExit(this.vehiclePlateExit).subscribe({

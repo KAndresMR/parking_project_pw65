@@ -18,8 +18,8 @@
               <input type="text" [(ngModel)]="vehicleForm.plate" placeholder="Ingrese la placa" name="plate" required>
 
               <h3>Espacio asignado: </h3>
-              <input type="text" [(ngModel)]="vehicleForm.space.number" placeholder="Ingrese el código del espacio"
-                name="space" required (click)="openSpaceModal()" >
+              <input  type="text" [(ngModel)]="vehicleForm.space.number" placeholder="Ingrese el código del espacio"
+                name="space" required (click)="openSpaceModal()" *ngIf="vehicleForm.space" >
 
               <!-- Modal para seleccionar el espacio -->
               <div class="modal" tabindex="-1" role="dialog" *ngIf="showModal">

@@ -1,8 +1,12 @@
+import { Space } from "./space.model";
+import { User } from "./user.model";
+import { Vehicle } from "./vehicle.model";
+
 export interface Ticket {
-    id: number;
-    placa: number;
-    entryDateTime: Date;
-    exitDateTime: Date;
-    spaceId: number;
-    state: string; // Propietario
+    id?: string;
+    vehicle: Vehicle; // Placa
+    state: 'Activo' | 'Cerrado';
+    entryDateTime: Number;
+    exitDateTime: Number;
+
 }

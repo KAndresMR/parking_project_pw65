@@ -14,9 +14,6 @@ export class VehicleService {
   constructor(private http: HttpClient) { }
 
   registerVehicle(vehicle: Vehicle): Observable<any> {
-    console.log("Servico de angular: ", vehicle);
-    console.log("Servico de angular: ", vehicle.space);
-    console.log("Servico de angular: ", vehicle.user);
     const token = localStorage.getItem('token');
         if (!token) {
           console.error('🚨 No hay token guardado en localStorage');

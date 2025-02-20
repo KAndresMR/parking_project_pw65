@@ -12,6 +12,7 @@ import { NgModule } from '@angular/core';
 import { HistoryComponent } from './components/history/history.component';
 import { authGuard } from './guards/auth.guard';
 import { VehicleManagementComponent } from './components/vehicle-management/vehicle-management.component';
+import { TicketManagementComponent } from './components/ticket-management/ticket-management.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },   // Ruta para el login
@@ -33,6 +34,7 @@ export const routes: Routes = [
       { path: 'schedule', component: WorkScheduleComponent },
       { path: 'history', component: HistoryComponent },
       { path: 'vehicle', component: VehicleManagementComponent },
+      { path: 'ticket', component: TicketManagementComponent },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }  // Redirección por defecto al Dashboard
     ]
   },

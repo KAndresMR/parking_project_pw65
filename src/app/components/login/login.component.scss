@@ -1,107 +1,132 @@
 .login-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-color: #B5C1C1;
-  }
-  
-  .login-box {
-    background-color: #D9D9D9;
-    padding: 2rem;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    width: 350px;
-    text-align: center;
-  
-    h2 {
-      margin-bottom: 1.5rem;
-      font-size: 1.8rem;
-      color: #333;
-    }
-  
-    .input-group {
-      margin-bottom: 1.2rem;
-      text-align: left;
-  
-      label {
-        display: block;
-        margin-bottom: 0.5rem;
-        font-size: 0.9rem;
-        color: #000000;//666
-      }
-  
-      input {
-        width: 100%;
-        padding: 0.8rem;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        font-size: 1rem;
-        color: #333;
-  
-        &:focus {
-          border-color: #007bff;
-          outline: none;
-        }
-      }
-    }
-  
-    .login-btn {
-      width: 100%;
-      padding: 0.8rem;
-      background-color: #007BFF;      
-      border: none;
-      border-radius: 5px;
-      color: #000000;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-  
-      &:hover {
-        background-color: #0056b3;
-      }
-    }
-  
-    .separator {
-      margin: 1.5rem 0;
-      color: #999;
-      font-size: 0.9rem;
-    }
-  
-    .google-btn {
-      width: 100%;
-      padding: 0.8rem;
-      background-color: #ffffff;
-      border: none;
-      border-radius: 5px;
-      color: #000000;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-  
-      &:hover {
-        background-color: #c33d2d;
-      }
-    }
-  }  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #B5C1C1;
+  padding: 1rem; // Agrega padding para evitar cortes en móviles.
+}
 
-  .extra-options {
-    margin-top: 1.5rem;
-    text-align: center;
-  
-    a {
+.login-box {
+  background-color: #D9D9D9;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px; // Limita el ancho para que no se vea demasiado grande en pantallas grandes.
+  text-align: center;
+
+  h2 {
+    margin-bottom: 1.5rem;
+    font-size: 1.8rem;
+    color: #333;
+  }
+
+  .input-group {
+    margin-bottom: 1.2rem;
+    text-align: left;
+
+    label {
       display: block;
-      color: #1E40AF;
-      text-decoration: underline;
+      margin-bottom: 0.5rem;
       font-size: 0.9rem;
-      margin-top: 0.5rem;
-      cursor: pointer;
-      transition: color 0.3s ease;
-  
-      &:hover {
-        color: #1D4ED8; // Color más claro al pasar el cursor.
+      color: #000;
+    }
+
+    input {
+      width: 100%;
+      padding: 0.8rem;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 1rem;
+      color: #333;
+      transition: border-color 0.3s ease-in-out;
+
+      &:focus {
+        border-color: #007bff;
+        outline: none;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
       }
     }
   }
-  
-  
+
+  .login-btn {
+    width: 100%;
+    padding: 0.8rem;
+    background-color: #007BFF;      
+    border: none;
+    border-radius: 5px;
+    color: #fff; // Texto en blanco para mejor contraste.
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+
+    &:hover {
+      background-color: #0056b3;
+    }
+  }
+
+  .separator {
+    margin: 1.5rem 0;
+    color: #666;
+    font-size: 0.9rem;
+    font-weight: bold;
+  }
+
+  .google-btn {
+    width: 100%;
+    padding: 0.8rem;
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    color: #000;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out, border 0.3s ease-in-out;
+
+    &:hover {
+      background-color: #c33d2d;
+      color: #fff;
+      border-color: #c33d2d;
+    }
+  }
+}  
+
+.extra-options {
+  margin-top: 1.5rem;
+  text-align: center;
+
+  a {
+    display: block;
+    color: #1E40AF;
+    text-decoration: none;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+    cursor: pointer;
+    transition: color 0.3s ease-in-out;
+
+    &:hover {
+      color: #1D4ED8;
+      text-decoration: underline;
+    }
+  }
+}
+
+/* Responsividad */
+@media (max-width: 480px) {
+  .login-box {
+    padding: 1.5rem;
+  }
+
+  .login-btn,
+  .google-btn {
+    font-size: 0.9rem;
+    padding: 0.7rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+}

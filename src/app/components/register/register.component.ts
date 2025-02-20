@@ -38,7 +38,7 @@ export class RegisterComponent implements OnInit {
       name: '',
       email: '',
       password: '',
-      role: 'cliente',
+      role: 'administrador',
       state: 'Inactivo'
     };
   }
